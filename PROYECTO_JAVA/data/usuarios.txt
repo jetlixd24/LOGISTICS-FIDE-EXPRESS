@@ -1,0 +1,4 @@
+1;ADMINISTRADOR;Administrador;admin@fide.com;240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9;ACTIVO;0;Gerente general;;;
+2;CLIENTE;Juan Perez;juan@ejemplo.com;5ac0852e770506dcd80f1a36d20ba7878bf82244b836d9324593bd14bc56dcb5;ACTIVO;1;20512345678;Distribuidora Ejemplo SAC;999111222;Av. Principal 123
+3;TRANSPORTISTA;Ana Ruiz;ana@transp.com;70dc492df50322b9edc7817d7e3361199aa83b4edf22101479743ed61e1c1f21;ACTIVO;1;20600000001;Transportes Andes SAC;988777666;
+4;CLIENTE;jetli;cliente@gmail.com;09a31a7001e261ab1e056182a71d3cf57f582ca9a29cff5eb83be0f0549730a9;ACTIVO;0;20548059691;tys operaciones sac;945484563;aldea10.villa
