@@ -1,0 +1,7 @@
+1;Lima;Cusco;2026-11-07;ENTREGADO;3000.0;3;Repuestos automotrices;2500.0;8.0;;Pedro Gomez;2026-11-07
+2;Arequipa;Lima;2026-11-07;ENTREGADO;1800.0;4;Textiles;1500.0;5.0;;Rosa Salas;2026-11-07
+3;Lima;Arequipa;2026-11-07;ASIGNADO;3500.0;3;Electrodomesticos;1200.0;6.0;;;
+4;Lima;Trujillo;2026-11-07;PENDIENTE;0.0;3;Cajas de mercaderia;800.0;3.0;;;
+5;Piura;Chiclayo;2026-11-07;PENDIENTE;0.0;4;Equipos de oficina;600.0;2.0;;;
+6;Huancayo;Lima;2026-11-07;APROBADO;2800.0;4;Material de construccion;3000.0;10.0;;;
+7;Lima;Tacna;2026-11-07;APROBADO;9000.0;4;Maquinaria pesada;25000.0;40.0;;;

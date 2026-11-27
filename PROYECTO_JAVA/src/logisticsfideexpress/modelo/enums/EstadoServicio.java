@@ -8,6 +8,6 @@ package logisticsfideexpress.modelo.enums;
  *
  * @author JETLI
  */
-public enum EstadoServicio {
+public enum EstadoServicio  {
         PENDIENTE,APROBADO,RECHAZADO,ASIGNADO,EN_RUTA,ENTREGADO
 }

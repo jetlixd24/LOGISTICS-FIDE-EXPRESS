@@ -1,0 +1,20 @@
+1;1;2026-11-07T19:47:53.796112756;PENDIENTE;Lima;Solicitud registrada por el cliente
+2;2;2026-11-07T19:47:53.800127976;PENDIENTE;Arequipa;Solicitud registrada por el cliente
+3;3;2026-11-07T19:47:53.802413807;PENDIENTE;Lima;Solicitud registrada por el cliente
+4;4;2026-11-07T19:47:53.803684455;PENDIENTE;Lima;Solicitud registrada por el cliente
+5;5;2026-11-07T19:47:53.806580458;PENDIENTE;Piura;Solicitud registrada por el cliente
+6;6;2026-11-07T19:47:53.809436805;PENDIENTE;Huancayo;Solicitud registrada por el cliente
+7;7;2026-11-07T19:47:53.817709977;PENDIENTE;Lima;Solicitud registrada por el cliente
+8;1;2026-11-07T19:47:53.824124877;APROBADO;Lima;Solicitud aprobada
+9;1;2026-11-07T19:47:53.846701844;ASIGNADO;Lima;Asignado vehiculo ABC-123 y conductor Carlos Lopez
+10;1;2026-11-07T19:47:53.847356812;EN_RUTA;Ica;Salida del almacen de Lima
+11;1;2026-11-07T19:47:53.849441195;EN_RUTA;Nazca;Sin novedades
+12;1;2026-11-07T19:47:53.852338414;ENTREGADO;Cusco;Entrega en almacen del cliente
+13;2;2026-11-07T19:47:53.858565390;APROBADO;Arequipa;Solicitud aprobada
+14;2;2026-11-07T19:47:53.861396913;ASIGNADO;Arequipa;Asignado vehiculo DEF-456 y conductor Rosa Huaman
+15;2;2026-11-07T19:47:53.861766224;EN_RUTA;Nazca;En camino a Lima
+16;2;2026-11-07T19:47:53.865188989;ENTREGADO;Lima;Entrega conforme
+17;3;2026-11-07T19:47:53.899698832;APROBADO;Lima;Solicitud aprobada
+18;3;2026-11-07T19:47:53.904578557;ASIGNADO;Lima;Asignado vehiculo XYZ-789 y conductor Luis Quispe
+19;6;2026-11-07T19:47:53.905521927;APROBADO;Huancayo;Solicitud aprobada
+20;7;2026-11-07T19:47:53.907468908;APROBADO;Lima;Solicitud aprobada
