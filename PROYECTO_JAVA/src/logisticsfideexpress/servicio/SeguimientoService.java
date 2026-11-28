@@ -4,6 +4,10 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.ISeguimientoDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.dao.interfaz.IConductorDAO;
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
 /**
  *
  * @author JETLI
@@ -22,10 +26,6 @@ import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoConductor;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.dao.ConductorDAO;
-import logisticsfideexpress.dao.SeguimientoDAO;
-import logisticsfideexpress.dao.ServicioDAO;
-import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -35,13 +35,13 @@ import logisticsfideexpress.util.Validador;
  */
 public class SeguimientoService {
 
-    private final SeguimientoDAO repo;
-    private final ServicioDAO servicios;
-    private final VehiculoDAO vehiculos;
-    private final ConductorDAO conductores;
+    private final ISeguimientoDAO repo;
+    private final IServicioDAO servicios;
+    private final IVehiculoDAO vehiculos;
+    private final IConductorDAO conductores;
 
-    public SeguimientoService(SeguimientoDAO repo, ServicioDAO servicios,
-                             VehiculoDAO vehiculos, ConductorDAO conductores) {
+    public SeguimientoService(ISeguimientoDAO repo, IServicioDAO servicios,
+                             IVehiculoDAO vehiculos, IConductorDAO conductores) {
         this.repo = repo;
         this.servicios = servicios;
         this.vehiculos = vehiculos;
@@ -65,6 +65,14 @@ public class SeguimientoService {
             throw new ValidacionException("Debe indicar el nuevo estado.");
         }
         validarTransicion(s.getEstado(), nuevoEstado);
+        
+        AsignacionViaje activa = servicios.buscarAsignacionActiva(s);
+        if (activa != null && LocalDate.now().isBefore(activa.getFechaSalida())) {
+            throw new OperacionNoPermitidaException("No se puede registrar el avance: la fecha de salida del viaje es "
+                    + activa.getFechaSalida() + " y hoy es " + LocalDate.now() + ".");
+        }
+        
+        
         Validador.noVacio(ubicacion, "Ubicacion");
         if (nuevoEstado == EstadoServicio.ENTREGADO) {
             Validador.noVacio(receptor, "Receptor de la entrega");

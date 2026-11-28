@@ -8,74 +8,148 @@ package logisticsfideexpress.dao;
  *
  * @author JETLI
  */
+import logisticsfideexpress.dao.interfaz.IProveedorDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import logisticsfideexpress.excepciones.AccesoDatosException;
 import logisticsfideexpress.modelo.Proveedor;
-import logisticsfideexpress.util.ArchivoUtil;
 
 /**
- * data/proveedores.txt Formato: id;ruc;razonSocial;telefono Los proveedores no
- * se eliminan: si ya tienen productos o facturas, se perderia el historial.
+ * Acceso a MySQL para la tabla proveedor. Los proveedores no se dan de baja:
+ * si ya tienen productos o facturas, se perdería el historial.
  */
-public class ProveedorDAO extends RepositorioArchivo<Proveedor> {
+public class ProveedorDAO implements IProveedorDAO {
 
-    private static final String RUTA = "data/proveedores.txt";
+    private static final String SELECT_BASE
+            = "SELECT id_proveedor, ruc, razon_social, telefono FROM proveedor ";
 
-    public ProveedorDAO() {
-        super(RUTA);
-        cargar();
+    private Proveedor mapear(ResultSet rs) throws SQLException {
+        return new Proveedor(rs.getInt("id_proveedor"), rs.getString("ruc"),
+                rs.getString("razon_social"), rs.getString("telefono"));
     }
 
     @Override
-    protected String aLinea(Proveedor p) {
-        return String.join(ArchivoUtil.SEPARADOR,
-                String.valueOf(p.getId()),
-                ArchivoUtil.limpiar(p.getRuc()),
-                ArchivoUtil.limpiar(p.getRazonSocial()),
-                ArchivoUtil.limpiar(p.getTelefono()));
+    public void guardar(Proveedor p) {
+        String sql = "INSERT INTO proveedor (ruc, razon_social, telefono) VALUES (?, ?, ?)";
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, p.getRuc());
+            ps.setString(2, p.getRazonSocial());
+            ps.setString(3, p.getTelefono());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    p.setId(rs.getInt(1));
+                }
+            }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new AccesoDatosException("El RUC del proveedor ya esta registrado.", e);
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo guardar el proveedor. Verifique la conexión con MySQL.", e);
+        }
     }
 
     @Override
-    protected Proveedor deLinea(String[] c) {
-        return new Proveedor(Integer.parseInt(c[0]), c[1], c[2], c[3]);
+    public Proveedor buscarPorId(int id) {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE id_proveedor = ?")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapear(rs) : null;
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo consultar el proveedor.", e);
+        }
     }
 
     @Override
-    protected int idDe(Proveedor p) {
-        return p.getId();
+    public List<Proveedor> listar() {
+        List<Proveedor> lista = new ArrayList<>();
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "ORDER BY razon_social");
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapear(rs));
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo listar los proveedores. Verifique la conexión con MySQL.", e);
+        }
+        return lista;
     }
 
     @Override
-    protected void fijarId(Proveedor p, int id) {
-        p.setId(id);
+    public void actualizar(Proveedor p) {
+        String sql = "UPDATE proveedor SET ruc = ?, razon_social = ?, telefono = ? WHERE id_proveedor = ?";
+        try (Connection cn = ConexionBD.obtener(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, p.getRuc());
+            ps.setString(2, p.getRazonSocial());
+            ps.setString(3, p.getTelefono());
+            ps.setInt(4, p.getId());
+            ps.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new AccesoDatosException("El RUC del proveedor ya esta registrado.", e);
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo actualizar el proveedor.", e);
+        }
     }
 
     @Override
-    protected void marcarBaja(Proveedor p) {
+    public void darDeBaja(int id) {
         throw new UnsupportedOperationException("Los proveedores no se dan de baja (se conserva el historial).");
     }
 
+    @Override
+    public int siguienteId() {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement("SELECT COALESCE(MAX(id_proveedor), 0) + 1 FROM proveedor");
+                ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo obtener el siguiente id.", e);
+        }
+    }
+
+    @Override
     public Proveedor buscarPorRuc(String ruc) {
         if (ruc == null) {
             return null;
         }
-        for (Proveedor p : items) {
-            if (p.getRuc().equalsIgnoreCase(ruc.trim())) {
-                return p;
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE + "WHERE ruc = ?")) {
+            ps.setString(1, ruc.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapear(rs) : null;
             }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo consultar el proveedor.", e);
         }
-        return null;
     }
 
-    // Sobrecarga: por texto (razon social o RUC)
+    // Búsqueda por texto (razón social o RUC), filtrada en SQL
+    @Override
     public List<Proveedor> buscar(String texto) {
-        String t = texto == null ? "" : texto.trim().toLowerCase();
-        List<Proveedor> resultado = new ArrayList<>();
-        for (Proveedor p : items) {
-            if (p.getRazonSocial().toLowerCase().contains(t) || p.getRuc().contains(t)) {
-                resultado.add(p);
+        String t = "%" + (texto == null ? "" : texto.trim()) + "%";
+        List<Proveedor> lista = new ArrayList<>();
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE
+                        + "WHERE razon_social LIKE ? OR ruc LIKE ? ORDER BY razon_social")) {
+            ps.setString(1, t);
+            ps.setString(2, t);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
             }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo buscar proveedores.", e);
         }
-        return resultado;
+        return lista;
     }
 }

@@ -14,6 +14,12 @@ import logisticsfideexpress.dao.ClienteDAO;
 import logisticsfideexpress.dao.ConductorDAO;
 import logisticsfideexpress.dao.CostoDAO;
 import logisticsfideexpress.dao.FacturaDAO;
+import logisticsfideexpress.dao.interfaz.IProductoDAO;
+import logisticsfideexpress.dao.interfaz.IPagoDAO;
+import logisticsfideexpress.dao.interfaz.IFacturaDAO;
+import logisticsfideexpress.dao.interfaz.ILiquidacionDAO;
+import logisticsfideexpress.dao.interfaz.ICostoDAO;
+import logisticsfideexpress.dao.interfaz.ISeguimientoDAO;
 import logisticsfideexpress.dao.LiquidacionDAO;
 import logisticsfideexpress.dao.PagoDAO;
 import logisticsfideexpress.dao.ProductoDAO;
@@ -23,6 +29,13 @@ import logisticsfideexpress.dao.ServicioDAO;
 import logisticsfideexpress.dao.TransportistaDAO;
 import logisticsfideexpress.dao.UsuarioDAO;
 import logisticsfideexpress.dao.VehiculoDAO;
+import logisticsfideexpress.dao.interfaz.IClienteDAO;
+import logisticsfideexpress.dao.interfaz.IConductorDAO;
+import logisticsfideexpress.dao.interfaz.IProveedorDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.dao.interfaz.ITransportistaDAO;
+import logisticsfideexpress.dao.interfaz.IUsuarioDAO;
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
 
 /**
  * Fachada principal: crea todos los repositorios (cargan sus archivos de data/)
@@ -46,23 +59,23 @@ public class ServiceFactory {
 
     public ServiceFactory() {
         // --- semana 10: usuarios, flota y conductores
-        UsuarioDAO usuarioRepo = new UsuarioDAO();
-        ClienteDAO clienteRepo = new ClienteDAO(usuarioRepo);
-        TransportistaDAO transportistaRepo = new TransportistaDAO(usuarioRepo);
-        VehiculoDAO vehiculoRepo = new VehiculoDAO(transportistaRepo);
-        ConductorDAO conductorRepo = new ConductorDAO(vehiculoRepo);
+        IUsuarioDAO usuarioRepo = new UsuarioDAO();
+        IClienteDAO clienteRepo = new ClienteDAO(usuarioRepo);
+        ITransportistaDAO transportistaRepo = new TransportistaDAO(usuarioRepo);
+        IVehiculoDAO vehiculoRepo = new VehiculoDAO(transportistaRepo);
+        IConductorDAO conductorRepo = new ConductorDAO(vehiculoRepo);
 
         // --- semana 12: almacen, servicios y seguimiento
-        ProveedorDAO proveedorRepo = new ProveedorDAO();
-        ProductoDAO productoRepo = new ProductoDAO(proveedorRepo);
-        ServicioDAO servicioRepo = new ServicioDAO(clienteRepo, vehiculoRepo, conductorRepo);
-        SeguimientoDAO seguimientoRepo = new SeguimientoDAO(servicioRepo);
+        IProveedorDAO proveedorRepo = new ProveedorDAO();
+        IProductoDAO productoRepo = new ProductoDAO(proveedorRepo);
+        IServicioDAO servicioRepo = new ServicioDAO(clienteRepo, vehiculoRepo, conductorRepo);
+        ISeguimientoDAO seguimientoRepo = new SeguimientoDAO(servicioRepo);
 
         // --- semana 13: costos, liquidaciones, facturas y pagos
-        CostoDAO costoRepo = new CostoDAO(servicioRepo);
-        LiquidacionDAO liquidacionRepo = new LiquidacionDAO(servicioRepo);
-        FacturaDAO facturaRepo = new FacturaDAO();
-        PagoDAO pagoRepo = new PagoDAO(facturaRepo);
+        ICostoDAO costoRepo = new CostoDAO(servicioRepo);
+        ILiquidacionDAO liquidacionRepo = new LiquidacionDAO(servicioRepo);
+        IFacturaDAO facturaRepo = new FacturaDAO();
+        IPagoDAO pagoRepo = new PagoDAO(facturaRepo);
 
         this.clientes = new ClienteService(clienteRepo, usuarioRepo);
         this.usuarios = new UsuarioService(usuarioRepo, clientes);

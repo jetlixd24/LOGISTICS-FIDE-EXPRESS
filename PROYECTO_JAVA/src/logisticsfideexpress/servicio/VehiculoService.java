@@ -4,6 +4,8 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
+import logisticsfideexpress.dao.interfaz.ITransportistaDAO;
 /**
  *
  * @author JETLI
@@ -19,20 +21,19 @@ import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.VehiculoAfiliado;
 import logisticsfideexpress.modelo.VehiculoPropio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.dao.TransportistaDAO;
-import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
+import logisticsfideexpress.util.ValidadorDocumento;
 
 /**
  * RF10-RF13.
  */
 public class VehiculoService {
 
-    private final VehiculoDAO repo;
-    private final TransportistaDAO transportistas;
+    private final IVehiculoDAO repo;
+    private final ITransportistaDAO transportistas;
 
-    public VehiculoService(VehiculoDAO repo, TransportistaDAO transportistas) {
+    public VehiculoService(IVehiculoDAO repo, ITransportistaDAO transportistas) {
         this.repo = repo;
         this.transportistas = transportistas;
     }
@@ -45,7 +46,7 @@ public class VehiculoService {
             String kilometraje, String fechaCompra)
             throws ValidacionException, RegistroDuplicadoException, OperacionNoPermitidaException {
         Sesion.exigirAdministrador();
-        Validador.noVacio(placa, "Placa");
+        ValidadorDocumento.placa(placa, "Placa");
         Validador.noVacio(marca, "Marca");
         double capacidad = Validador.numeroPositivo(capacidadKg, "Capacidad (kg)");
         double km = Validador.esVacio(kilometraje) ? 0 : Validador.numeroNoNegativo(kilometraje, "Kilometraje");
@@ -68,7 +69,7 @@ public class VehiculoService {
         if (t == null) {
             throw new RegistroNoEncontradoException("El transportista seleccionado no existe.");
         }
-        Validador.noVacio(placa, "Placa");
+       ValidadorDocumento.placa(placa, "Placa");
         Validador.noVacio(marca, "Marca");
         double capacidad = Validador.numeroPositivo(capacidadKg, "Capacidad (kg)");
         double tarifa = Validador.numeroPositivo(tarifaAcordada, "Tarifa acordada");
@@ -79,11 +80,11 @@ public class VehiculoService {
         return v;
     }
 
-    private void validarPlacaUnica(String placa) throws RegistroDuplicadoException {
-        if (repo.buscarPorPlaca(placa) != null) {
-            throw new RegistroDuplicadoException("La placa ya esta registrada.");
-        }
-    }
+        private void validarPlacaUnica(String placa) throws RegistroDuplicadoException {
+           if (repo.buscarPorPlaca(placa.trim().toUpperCase()) != null) {
+               throw new RegistroDuplicadoException("La placa ya esta registrada.");
+           }
+       }
 
     /**
      * RF12

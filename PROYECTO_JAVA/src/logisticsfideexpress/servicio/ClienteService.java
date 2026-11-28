@@ -15,21 +15,21 @@ import logisticsfideexpress.excepciones.RegistroNoEncontradoException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Cliente;
 import logisticsfideexpress.modelo.Usuario;
-import logisticsfideexpress.dao.ClienteDAO;
-import logisticsfideexpress.dao.UsuarioDAO;
+import logisticsfideexpress.dao.interfaz.IClienteDAO;
+import logisticsfideexpress.dao.interfaz.IUsuarioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.SeguridadUtil;
 import logisticsfideexpress.util.Validador;
-
+import logisticsfideexpress.util.ValidadorDocumento;
 /**
  * RF05-RF07 (y el registro propio del cliente, RF02).
  */
 public class ClienteService {
 
-    private final ClienteDAO repo;
-    private final UsuarioDAO usuarios;
+    private final IClienteDAO repo;
+    private final IUsuarioDAO usuarios;
 
-    public ClienteService(ClienteDAO repo, UsuarioDAO usuarios) {
+    public ClienteService(IClienteDAO repo, IUsuarioDAO usuarios) {
         this.repo = repo;
         this.usuarios = usuarios;
     }
@@ -64,9 +64,9 @@ public class ClienteService {
         Validador.noVacio(nombre, "Nombre");
         Validador.correoValido(correo);
         Validador.longitudMinima(clave, 6, "Contrasena");
-        Validador.noVacio(documento, "Documento");
+        ValidadorDocumento.dniORuc(documento, "Documento");
         Validador.noVacio(razonSocial, "Razon social");
-        Validador.noVacio(telefono, "Telefono");
+     ValidadorDocumento.telefono(telefono, "Telefono");
         Validador.noVacio(direccion, "Direccion");
         if (usuarios.buscarPorCorreo(correo) != null) {
             throw new RegistroDuplicadoException("El correo ya esta registrado.");
@@ -122,9 +122,9 @@ public class ClienteService {
             throw new RegistroNoEncontradoException("No existe el cliente solicitado.");
         }
         Validador.noVacio(nombre, "Nombre");
-        Validador.noVacio(documento, "Documento");
+        ValidadorDocumento.dniORuc(documento, "Documento");
         Validador.noVacio(razonSocial, "Razon social");
-        Validador.noVacio(telefono, "Telefono");
+        ValidadorDocumento.telefono(telefono, "Telefono");
         Validador.noVacio(direccion, "Direccion");
         Cliente otro = repo.buscarPorDocumento(documento);
         if (otro != null && otro.getId() != id) {
@@ -145,7 +145,7 @@ public class ClienteService {
     public void actualizarMisDatos(String telefono, String direccion, String nuevaClave)
             throws ValidacionException, OperacionNoPermitidaException {
         Sesion.exigirCliente();
-        Validador.noVacio(telefono, "Telefono");
+       ValidadorDocumento.telefono(telefono, "Telefono");
         Validador.noVacio(direccion, "Direccion");
         Cliente c = repo.buscarPorId(Sesion.getUsuario().getId());
         c.setTelefono(telefono.trim());

@@ -4,6 +4,8 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.IConductorDAO;
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
 /**
  *
  * @author JETLI
@@ -16,20 +18,18 @@ import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Conductor;
 import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.dao.ConductorDAO;
-import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
-
+import logisticsfideexpress.util.ValidadorDocumento;
 /**
  * RF14-RF15.
  */
 public class ConductorService {
 
-    private final ConductorDAO repo;
-    private final VehiculoDAO vehiculos;
+    private final IConductorDAO repo;
+    private final IVehiculoDAO vehiculos;
 
-    public ConductorService(ConductorDAO repo, VehiculoDAO vehiculos) {
+    public ConductorService(IConductorDAO repo, IVehiculoDAO vehiculos) {
         this.repo = repo;
         this.vehiculos = vehiculos;
     }
@@ -42,11 +42,11 @@ public class ConductorService {
             throws ValidacionException, RegistroDuplicadoException,
             RegistroNoEncontradoException, OperacionNoPermitidaException {
         Sesion.exigirAdministrador();
-        Validador.digitosExactos(dni, 8, "DNI");
+        ValidadorDocumento.dni(dni, "DNI");
         Validador.noVacio(nombre, "Nombre");
         Validador.noVacio(licencia, "Licencia");
         Validador.noVacio(categoria, "Categoria");
-        if (repo.buscarPorLicencia(licencia) != null) {
+        if (repo.buscarPorLicencia(licencia.trim().toUpperCase()) != null) {
             throw new RegistroDuplicadoException("La licencia ya esta registrada.");
         }
         Conductor c = new Conductor(dni.trim(), nombre.trim(), licencia.trim().toUpperCase(), categoria.trim());

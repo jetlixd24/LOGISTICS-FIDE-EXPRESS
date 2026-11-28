@@ -4,6 +4,10 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.IPagoDAO;
+import logisticsfideexpress.dao.interfaz.IFacturaDAO;
+import logisticsfideexpress.dao.interfaz.IProveedorDAO;
+import logisticsfideexpress.dao.interfaz.ITransportistaDAO;
 /**
  *
  * @author JETLI
@@ -23,12 +27,8 @@ import logisticsfideexpress.modelo.Transportista;
 import logisticsfideexpress.modelo.enums.EstadoFactura;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.TipoFactura;
-import logisticsfideexpress.dao.ClienteDAO;
-import logisticsfideexpress.dao.FacturaDAO;
-import logisticsfideexpress.dao.PagoDAO;
-import logisticsfideexpress.dao.ProveedorDAO;
-import logisticsfideexpress.dao.ServicioDAO;
-import logisticsfideexpress.dao.TransportistaDAO;
+import logisticsfideexpress.dao.interfaz.IClienteDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -39,16 +39,16 @@ import logisticsfideexpress.util.Validador;
  */
 public class FacturacionService {
 
-    private final FacturaDAO facturas;
-    private final PagoDAO pagos;
-    private final ServicioDAO servicios;
-    private final ClienteDAO clientes;
-    private final ProveedorDAO proveedores;
-    private final TransportistaDAO transportistas;
+    private final IFacturaDAO facturas;
+    private final IPagoDAO pagos;
+    private final IServicioDAO servicios;
+    private final IClienteDAO clientes;
+    private final IProveedorDAO proveedores;
+    private final ITransportistaDAO transportistas;
 
-    public FacturacionService(FacturaDAO facturas, PagoDAO pagos, ServicioDAO servicios,
-            ClienteDAO clientes, ProveedorDAO proveedores,
-            TransportistaDAO transportistas) {
+    public FacturacionService(IFacturaDAO facturas, IPagoDAO pagos, IServicioDAO servicios,
+            IClienteDAO clientes, IProveedorDAO proveedores,
+            ITransportistaDAO transportistas) {
         this.facturas = facturas;
         this.pagos = pagos;
         this.servicios = servicios;
@@ -147,8 +147,7 @@ public class FacturacionService {
             throw new ValidacionException(e.getMessage() + " Saldo pendiente: " + f.getSaldo() + ".");
         }
         Pago p = new Pago(f, LocalDate.now(), importe, metodo.trim());
-        pagos.guardar(p);
-        facturas.actualizar(f);
+        pagos.guardar(p);   // sp_registrar_pago: inserta el pago y actualiza saldo/estado
         return p;
     }
 

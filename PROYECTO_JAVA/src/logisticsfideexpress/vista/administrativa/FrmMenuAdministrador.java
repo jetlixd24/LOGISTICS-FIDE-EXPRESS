@@ -93,8 +93,8 @@ public class FrmMenuAdministrador extends JFrame {
 
         m.seccion("Finanzas y reportes");
         m.item("Costos de viaje", () -> abrir("FrmCostos"));
-        m.item("Facturas", () -> abrir("FrmFacturas"));
-        m.item("Pagos", () -> abrir("FrmPagos"));
+     m.item("Emitir facturas", () -> abrir("FrmFacturas"));
+m.item("Finanzas", () -> abrir("FrmFinanzas"));
         m.item("Liquidaciones", () -> abrir("FrmLiquidaciones"));
         m.item("Reportes", () -> abrir("FrmReportes"));
 

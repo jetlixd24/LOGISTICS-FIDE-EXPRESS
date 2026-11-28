@@ -4,6 +4,10 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.ISeguimientoDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.dao.interfaz.IConductorDAO;
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
 /**
  *
  * @author JETLI
@@ -24,11 +28,7 @@ import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoConductor;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.dao.ClienteDAO;
-import logisticsfideexpress.dao.ConductorDAO;
-import logisticsfideexpress.dao.SeguimientoDAO;
-import logisticsfideexpress.dao.ServicioDAO;
-import logisticsfideexpress.dao.VehiculoDAO;
+import logisticsfideexpress.dao.interfaz.IClienteDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -39,14 +39,14 @@ import logisticsfideexpress.util.Validador;
  */
 public class ServicioService {
 
-    private final ServicioDAO repo;
-    private final ClienteDAO clientes;
-    private final VehiculoDAO vehiculos;
-    private final ConductorDAO conductores;
-    private final SeguimientoDAO seguimientos;
+    private final IServicioDAO repo;
+    private final IClienteDAO clientes;
+    private final IVehiculoDAO vehiculos;
+    private final IConductorDAO conductores;
+    private final ISeguimientoDAO seguimientos;
 
-    public ServicioService(ServicioDAO repo, ClienteDAO clientes, VehiculoDAO vehiculos,
-            ConductorDAO conductores, SeguimientoDAO seguimientos) {
+    public ServicioService(IServicioDAO repo, IClienteDAO clientes, IVehiculoDAO vehiculos,
+            IConductorDAO conductores, ISeguimientoDAO seguimientos) {
         this.repo = repo;
         this.clientes = clientes;
         this.vehiculos = vehiculos;
@@ -65,6 +65,10 @@ public class ServicioService {
         Sesion.exigirCliente();
         Validador.noVacio(origen, "Origen");
         Validador.noVacio(destino, "Destino");
+        if (origen.trim().equalsIgnoreCase(destino.trim())) {
+    throw new ValidacionException("El origen y el destino no pueden ser iguales.");
+}
+        
         Validador.noVacio(descripcionCarga, "Descripcion de la carga");
         double peso = Validador.numeroPositivo(pesoKg, "Peso (kg)");
         double vol = Validador.esVacio(volumen) ? 0 : Validador.numeroNoNegativo(volumen, "Volumen");
@@ -173,6 +177,10 @@ public class ServicioService {
         LocalDate salida = Validador.esVacio(fechaSalida) ? LocalDate.now() : Validador.aFecha(fechaSalida, "Fecha de salida");
         if (v.getEstado() != EstadoVehiculo.DISPONIBLE) {
             throw new OperacionNoPermitidaException("El vehiculo no esta disponible (estado: " + v.getEstado() + ").");
+        }
+        
+        if (salida.isBefore(LocalDate.now())) {
+            throw new ValidacionException("La fecha de salida no puede ser anterior a hoy.");
         }
         if (c.getEstado() != EstadoConductor.DISPONIBLE) {
             throw new OperacionNoPermitidaException("El conductor no esta disponible (estado: " + c.getEstado() + ").");

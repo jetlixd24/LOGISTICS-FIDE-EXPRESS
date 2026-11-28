@@ -4,6 +4,7 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.ITransportistaDAO;
 /**
  *
  * @author JETLI
@@ -15,22 +16,21 @@ import logisticsfideexpress.excepciones.RegistroDuplicadoException;
 import logisticsfideexpress.excepciones.RegistroNoEncontradoException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Transportista;
-import logisticsfideexpress.dao.TransportistaDAO;
-import logisticsfideexpress.dao.UsuarioDAO;
+import logisticsfideexpress.dao.interfaz.IUsuarioDAO;
 import logisticsfideexpress.util.SeguridadUtil;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
-
+import logisticsfideexpress.util.ValidadorDocumento;
 /**
  * RF08-RF09. El transportista no tiene panel propio: lo registra el
  * administrador.
  */
 public class TransportistaService {
 
-    private final TransportistaDAO repo;
-    private final UsuarioDAO usuarios;
+    private final ITransportistaDAO repo;
+    private final IUsuarioDAO usuarios;
 
-    public TransportistaService(TransportistaDAO repo, UsuarioDAO usuarios) {
+    public TransportistaService(ITransportistaDAO repo, IUsuarioDAO usuarios) {
         this.repo = repo;
         this.usuarios = usuarios;
     }
@@ -41,10 +41,10 @@ public class TransportistaService {
         Sesion.exigirAdministrador();
         Validador.noVacio(nombre, "Nombre de contacto");
         Validador.correoValido(correo);
-        Validador.digitosExactos(ruc, 11, "RUC");
+        ValidadorDocumento.ruc(ruc, "RUC");
         Validador.noVacio(razonSocial, "Razon social");
-        Validador.noVacio(telefono, "Telefono");
-        if (repo.buscarPorRuc(ruc) != null) {
+        ValidadorDocumento.telefono(telefono, "Telefono");
+        if (repo.buscarPorRuc(ruc.trim()) != null) {
             throw new RegistroDuplicadoException("El RUC ya esta registrado.");
         }
         if (usuarios.buscarPorCorreo(correo) != null) {

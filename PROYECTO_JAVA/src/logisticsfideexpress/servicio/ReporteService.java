@@ -26,35 +26,43 @@ import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
 import logisticsfideexpress.modelo.enums.TipoFactura;
-import logisticsfideexpress.dao.CostoDAO;
-import logisticsfideexpress.dao.FacturaDAO;
-import logisticsfideexpress.dao.LiquidacionDAO;
-import logisticsfideexpress.dao.ProductoDAO;
-import logisticsfideexpress.dao.ServicioDAO;
-import logisticsfideexpress.dao.VehiculoDAO;
+import logisticsfideexpress.dao.interfaz.IProductoDAO;
+import logisticsfideexpress.dao.interfaz.IFacturaDAO;
+import logisticsfideexpress.dao.interfaz.ILiquidacionDAO;
+import logisticsfideexpress.dao.interfaz.ICostoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
-
+import logisticsfideexpress.dao.ReporteDAO;
+import logisticsfideexpress.dao.interfaz.IReporteDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.dao.interfaz.IVehiculoDAO;
+import logisticsfideexpress.modelo.ResumenPeriodo;
 /**
  * RF38-RF40: reportes de solo lectura (no modifica nada). Solo administrador.
  */
 public class ReporteService {
 
-    private final ServicioDAO servicios;
-    private final VehiculoDAO vehiculos;
-    private final ProductoDAO productos;
-    private final CostoDAO costos;
-    private final LiquidacionDAO liquidaciones;
-    private final FacturaDAO facturas;
+    private final IServicioDAO servicios;
+    private final IVehiculoDAO vehiculos;
+    private final IProductoDAO productos;
+    private final ICostoDAO costos;
+    private final ILiquidacionDAO liquidaciones;
+    private final IFacturaDAO facturas;
+    private final IReporteDAO reportes;
+    
+      public ReporteService(IServicioDAO servicios, IVehiculoDAO vehiculos, IProductoDAO productos, ICostoDAO costos, ILiquidacionDAO liquidaciones, IFacturaDAO facturas) {
+        this(servicios, vehiculos, productos, costos, liquidaciones, facturas, new ReporteDAO());
+    }
 
-    public ReporteService(ServicioDAO servicios, VehiculoDAO vehiculos, ProductoDAO productos,
-            CostoDAO costos, LiquidacionDAO liquidaciones, FacturaDAO facturas) {
+    public ReporteService(IServicioDAO servicios, IVehiculoDAO vehiculos, IProductoDAO productos,
+            ICostoDAO costos, ILiquidacionDAO liquidaciones, IFacturaDAO facturas, IReporteDAO reportes) {
         this.servicios = servicios;
         this.vehiculos = vehiculos;
         this.productos = productos;
         this.costos = costos;
         this.liquidaciones = liquidaciones;
         this.facturas = facturas;
+        this.reportes = reportes;
     }
 
     /**
@@ -191,6 +199,27 @@ public class ReporteService {
         return total;
     }
 
+        /**
+     * RF39: ingresos y egresos por mes de los últimos 12 meses (gráfico de barras).
+     */
+    public List<ResumenPeriodo> ingresosEgresos() throws OperacionNoPermitidaException {
+        Sesion.exigirAdministrador();
+        LocalDate hoy = LocalDate.now();
+        return reportes.ingresosEgresos(hoy.minusMonths(11).withDayOfMonth(1), hoy);
+    }
+
+    // Sobrecarga: entre dos fechas (AAAA-MM-DD)
+    public List<ResumenPeriodo> ingresosEgresos(String desde, String hasta)
+            throws ValidacionException, OperacionNoPermitidaException {
+        Sesion.exigirAdministrador();
+        LocalDate d = Validador.aFecha(desde, "Fecha desde");
+        LocalDate h = Validador.aFecha(hasta, "Fecha hasta");
+        if (h.isBefore(d)) {
+            throw new ValidacionException("La fecha final no puede ser anterior a la inicial.");
+        }
+        return reportes.ingresosEgresos(d, h);
+    }
+    
     /**
      * Texto listo para imprimir en el menu de consola o mostrar en FrmReportes.
      */

@@ -4,6 +4,7 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.ILiquidacionDAO;
 /**
  *
  * @author JETLI
@@ -19,9 +20,8 @@ import logisticsfideexpress.modelo.Liquidacion;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
-import logisticsfideexpress.dao.CostoDAO;
-import logisticsfideexpress.dao.LiquidacionDAO;
-import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.interfaz.ICostoDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -31,11 +31,11 @@ import logisticsfideexpress.util.Validador;
  */
 public class LiquidacionService {
 
-    private final LiquidacionDAO repo;
-    private final ServicioDAO servicios;
-    private final CostoDAO costos;
+    private final ILiquidacionDAO repo;
+    private final IServicioDAO servicios;
+    private final ICostoDAO costos;
 
-    public LiquidacionService(LiquidacionDAO repo, ServicioDAO servicios, CostoDAO costos) {
+    public LiquidacionService(ILiquidacionDAO repo, IServicioDAO servicios, ICostoDAO costos) {
         this.repo = repo;
         this.servicios = servicios;
         this.costos = costos;

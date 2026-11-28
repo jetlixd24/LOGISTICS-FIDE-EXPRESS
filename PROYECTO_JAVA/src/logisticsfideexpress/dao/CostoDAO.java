@@ -8,96 +8,161 @@ package logisticsfideexpress.dao;
  *
  * @author JETLI
  */
-import java.time.LocalDate;
+import logisticsfideexpress.dao.interfaz.ICostoDAO;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.excepciones.AccesoDatosException;
 import logisticsfideexpress.modelo.CostoViaje;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
-import logisticsfideexpress.util.ArchivoUtil;
 
 /**
- * data/costos.txt Formato: id;idServicio;tipo;monto;fecha;estado Baja logica:
- * el gasto queda RECHAZADO.
+ * Acceso a MySQL para costo_viaje. Baja lógica: el gasto queda RECHAZADO.
  */
-public class CostoDAO extends RepositorioArchivo<CostoViaje> {
+public class CostoDAO implements ICostoDAO {
 
-    private static final String RUTA = "data/costos.txt";
-    private final ServicioDAO servicios;
+    private static final String SELECT_BASE
+            = "SELECT id_costo, id_servicio, tipo, monto, fecha, estado FROM costo_viaje ";
 
-    public CostoDAO(ServicioDAO servicios) {
-        super(RUTA);
+    private final IServicioDAO servicios;
+
+    public CostoDAO(IServicioDAO servicios) {
         this.servicios = servicios;
-        cargar();
     }
 
-    @Override
-    protected String aLinea(CostoViaje c) {
-        return String.join(ArchivoUtil.SEPARADOR,
-                String.valueOf(c.getId()),
-                String.valueOf(c.getServicio().getId()),
-                ArchivoUtil.limpiar(c.getTipo()),
-                String.valueOf(c.getMonto()),
-                c.getFecha().toString(),
-                c.getEstado().name());
-    }
-
-    @Override
-    protected CostoViaje deLinea(String[] c) {
-        ServicioTransporte servicio = servicios.buscarPorId(Integer.parseInt(c[1]));
-        if (servicio == null) {
-            throw new IllegalStateException("servicio inexistente");
+    /** Convierte una fila en CostoViaje; los servicios ya leídos se reutilizan (caché). */
+    private CostoViaje mapear(ResultSet rs, Map<Integer, ServicioTransporte> cache) throws SQLException {
+        int idServicio = rs.getInt("id_servicio");
+        ServicioTransporte s = cache.get(idServicio);
+        if (s == null) {
+            s = servicios.buscarPorId(idServicio);
+            cache.put(idServicio, s);
         }
-        CostoViaje costo = new CostoViaje(Integer.parseInt(c[0]), servicio, c[2],
-                Double.parseDouble(c[3]), LocalDate.parse(c[4]));
-        costo.setEstado(EstadoGasto.valueOf(c[5]));
-        return costo;
+        if (s == null) {
+            return null;
+        }
+        CostoViaje c = new CostoViaje(rs.getInt("id_costo"), s, rs.getString("tipo"),
+                rs.getDouble("monto"), rs.getDate("fecha").toLocalDate());
+        c.setEstado(EstadoGasto.valueOf(rs.getString("estado")));
+        return c;
     }
 
-    @Override
-    protected int idDe(CostoViaje c) {
-        return c.getId();
-    }
-
-    @Override
-    protected void fijarId(CostoViaje c, int id) {
-        c.setId(id);
-    }
-
-    @Override
-    protected void marcarBaja(CostoViaje c) {
-        c.setEstado(EstadoGasto.RECHAZADO);
-    }
-
-    public List<CostoViaje> buscarPorServicio(int idServicio) {
-        List<CostoViaje> resultado = new ArrayList<>();
-        for (CostoViaje c : items) {
-            if (c.getServicio().getId() == idServicio) {
-                resultado.add(c);
+    private List<CostoViaje> consultar(String condicion, Object... params) {
+        List<CostoViaje> lista = new ArrayList<>();
+        Map<Integer, ServicioTransporte> cache = new HashMap<>();
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE + condicion)) {
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
             }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CostoViaje c = mapear(rs, cache);
+                    if (c != null) {
+                        lista.add(c);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo consultar los gastos. Verifique la conexión con MySQL.", e);
         }
-        return resultado;
+        return lista;
+    }
+
+    @Override
+    public void guardar(CostoViaje c) {
+        String sql = "INSERT INTO costo_viaje (id_servicio, tipo, monto, fecha, estado) VALUES (?, ?, ?, ?, ?)";
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, c.getServicio().getId());
+            ps.setString(2, c.getTipo());
+            ps.setDouble(3, c.getMonto());
+            ps.setDate(4, Date.valueOf(c.getFecha()));
+            ps.setString(5, c.getEstado().name());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    c.setId(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo guardar el gasto. Verifique la conexión con MySQL.", e);
+        }
+    }
+
+    @Override
+    public CostoViaje buscarPorId(int id) {
+        List<CostoViaje> r = consultar("WHERE id_costo = ?", id);
+        return r.isEmpty() ? null : r.get(0);
+    }
+
+    @Override
+    public List<CostoViaje> listar() {
+        return consultar("ORDER BY id_costo");
+    }
+
+    /** El modelo solo permite cambiar el estado, que es lo único que se actualiza. */
+    @Override
+    public void actualizar(CostoViaje c) {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(
+                        "UPDATE costo_viaje SET estado = ? WHERE id_costo = ?")) {
+            ps.setString(1, c.getEstado().name());
+            ps.setInt(2, c.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo actualizar el gasto.", e);
+        }
+    }
+
+    /** Baja lógica: el gasto queda RECHAZADO. */
+    @Override
+    public void darDeBaja(int id) {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(
+                        "UPDATE costo_viaje SET estado = 'RECHAZADO' WHERE id_costo = ?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo dar de baja el gasto.", e);
+        }
+    }
+
+    @Override
+    public int siguienteId() {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement("SELECT COALESCE(MAX(id_costo), 0) + 1 FROM costo_viaje");
+                ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo obtener el siguiente id.", e);
+        }
+    }
+
+    @Override
+    public List<CostoViaje> buscarPorServicio(int idServicio) {
+        return consultar("WHERE id_servicio = ? ORDER BY id_costo", idServicio);
     }
 
     // Sobrecarga: por estado
+    @Override
     public List<CostoViaje> buscar(EstadoGasto estado) {
-        List<CostoViaje> resultado = new ArrayList<>();
-        for (CostoViaje c : items) {
-            if (c.getEstado() == estado) {
-                resultado.add(c);
-            }
-        }
-        return resultado;
+        return consultar("WHERE estado = ? ORDER BY id_costo", estado.name());
     }
 
     // Sobrecarga: por servicio y estado
+    @Override
     public List<CostoViaje> buscar(int idServicio, EstadoGasto estado) {
-        List<CostoViaje> resultado = new ArrayList<>();
-        for (CostoViaje c : items) {
-            if (c.getServicio().getId() == idServicio && c.getEstado() == estado) {
-                resultado.add(c);
-            }
-        }
-        return resultado;
+        return consultar("WHERE id_servicio = ? AND estado = ? ORDER BY id_costo", idServicio, estado.name());
     }
 }

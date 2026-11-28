@@ -4,6 +4,7 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.ICostoDAO;
 /**
  *
  * @author JETLI
@@ -17,8 +18,7 @@ import logisticsfideexpress.modelo.CostoViaje;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
-import logisticsfideexpress.dao.CostoDAO;
-import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -28,10 +28,10 @@ import logisticsfideexpress.util.Validador;
  */
 public class CostoService {
 
-    private final CostoDAO repo;
-    private final ServicioDAO servicios;
+    private final ICostoDAO repo;
+    private final IServicioDAO servicios;
 
-    public CostoService(CostoDAO repo, ServicioDAO servicios) {
+    public CostoService(ICostoDAO repo, IServicioDAO servicios) {
         this.repo = repo;
         this.servicios = servicios;
     }

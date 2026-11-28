@@ -4,6 +4,8 @@
  */
 package logisticsfideexpress.servicio;
 
+import logisticsfideexpress.dao.interfaz.IProductoDAO;
+import logisticsfideexpress.dao.interfaz.IProveedorDAO;
 /**
  *
  * @author JETLI
@@ -18,10 +20,9 @@ import logisticsfideexpress.modelo.MovimientoAlmacen;
 import logisticsfideexpress.modelo.Producto;
 import logisticsfideexpress.modelo.Proveedor;
 import logisticsfideexpress.modelo.enums.TipoMovimiento;
-import logisticsfideexpress.dao.ProductoDAO;
-import logisticsfideexpress.dao.ProveedorDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
+import logisticsfideexpress.util.ValidadorDocumento;
 
 /**
  * RF16-RF20 (productos y movimientos de almacen) y RF35 (proveedores). Solo
@@ -29,10 +30,10 @@ import logisticsfideexpress.util.Validador;
  */
 public class AlmacenService {
 
-    private final ProductoDAO productos;
-    private final ProveedorDAO proveedores;
+    private final IProductoDAO productos;
+    private final IProveedorDAO proveedores;
 
-    public AlmacenService(ProductoDAO productos, ProveedorDAO proveedores) {
+    public AlmacenService(IProductoDAO productos, IProveedorDAO proveedores) {
         this.productos = productos;
         this.proveedores = proveedores;
     }
@@ -41,10 +42,10 @@ public class AlmacenService {
     public Proveedor registrarProveedor(String ruc, String razonSocial, String telefono)
             throws ValidacionException, RegistroDuplicadoException, OperacionNoPermitidaException {
         Sesion.exigirAdministrador();
-        Validador.digitosExactos(ruc, 11, "RUC");
+        ValidadorDocumento.ruc(ruc, "RUC");
         Validador.noVacio(razonSocial, "Razon social");
-        Validador.noVacio(telefono, "Telefono");
-        if (proveedores.buscarPorRuc(ruc) != null) {
+        ValidadorDocumento.telefono(telefono, "Telefono");
+        if (proveedores.buscarPorRuc(ruc.trim()) != null) {
             throw new RegistroDuplicadoException("El RUC del proveedor ya esta registrado.");
         }
         Proveedor p = new Proveedor(ruc.trim(), razonSocial.trim(), telefono.trim());

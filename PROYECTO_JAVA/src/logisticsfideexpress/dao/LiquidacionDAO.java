@@ -8,105 +8,176 @@ package logisticsfideexpress.dao;
  *
  * @author JETLI
  */
+import logisticsfideexpress.dao.interfaz.ILiquidacionDAO;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import logisticsfideexpress.dao.interfaz.IServicioDAO;
+import logisticsfideexpress.excepciones.AccesoDatosException;
 import logisticsfideexpress.modelo.DetalleLiquidacion;
 import logisticsfideexpress.modelo.Liquidacion;
 import logisticsfideexpress.modelo.ServicioTransporte;
-import logisticsfideexpress.util.ArchivoUtil;
 
 /**
- * data/liquidaciones.txt Formato:
- * id;idServicio;fecha;totalGastos;utilidad;detalles detalles = concepto:monto
- * separados por '|' (los detalles viven DENTRO de la liquidacion: composicion)
- * Las liquidaciones no se dan de baja (historico contable).
+ * Acceso a MySQL para liquidacion + detalle_liquidacion (composición: los
+ * detalles se guardan y se leen junto con la liquidación). Las liquidaciones no
+ * se modifican ni se dan de baja (histórico contable).
  */
-public class LiquidacionDAO extends RepositorioArchivo<Liquidacion> {
+public class LiquidacionDAO implements ILiquidacionDAO {
 
-    private static final String RUTA = "data/liquidaciones.txt";
-    private static final String SEP_DETALLE = "|";
-    private static final String SEP_MONTO = ":";
+    private static final int MYSQL_DUPLICADO = 1062;
 
-    private final ServicioDAO servicios;
+    private static final String SELECT_BASE
+            = "SELECT id_liquidacion, id_servicio, fecha, total_gastos, utilidad FROM liquidacion ";
 
-    public LiquidacionDAO(ServicioDAO servicios) {
-        super(RUTA);
+    private final IServicioDAO servicios;
+
+    public LiquidacionDAO(IServicioDAO servicios) {
         this.servicios = servicios;
-        cargar();
     }
 
-    @Override
-    protected String aLinea(Liquidacion l) {
-        StringBuilder detalles = new StringBuilder();
-        for (DetalleLiquidacion d : l.getDetalles()) {
-            if (detalles.length() > 0) {
-                detalles.append(SEP_DETALLE);
-            }
-            String concepto = ArchivoUtil.limpiar(d.getConcepto()).replace(SEP_DETALLE, "/").replace(SEP_MONTO, "-");
-            detalles.append(concepto).append(SEP_MONTO).append(d.getMonto());
+    /** Convierte una fila en Liquidacion y carga sus detalles con la misma conexión. */
+    private Liquidacion mapear(Connection cn, ResultSet rs, Map<Integer, ServicioTransporte> cache)
+            throws SQLException {
+        int idServicio = rs.getInt("id_servicio");
+        ServicioTransporte s = cache.get(idServicio);
+        if (s == null) {
+            s = servicios.buscarPorId(idServicio);
+            cache.put(idServicio, s);
         }
-        return String.join(ArchivoUtil.SEPARADOR,
-                String.valueOf(l.getId()),
-                String.valueOf(l.getServicio().getId()),
-                l.getFecha().toString(),
-                String.valueOf(l.getTotalGastos()),
-                String.valueOf(l.getUtilidad()),
-                detalles.toString());
-    }
+        if (s == null) {
+            return null;
+        }
+        int idLiquidacion = rs.getInt("id_liquidacion");
+        Liquidacion l = new Liquidacion(idLiquidacion, s, rs.getDate("fecha").toLocalDate());
+        double totalGastos = rs.getDouble("total_gastos");
+        double utilidad = rs.getDouble("utilidad");
 
-    @Override
-    protected Liquidacion deLinea(String[] c) {
-        ServicioTransporte servicio = servicios.buscarPorId(Integer.parseInt(c[1]));
-        if (servicio == null) {
-            throw new IllegalStateException("servicio inexistente");
-        }
-        Liquidacion l = new Liquidacion(Integer.parseInt(c[0]), servicio, LocalDate.parse(c[2]));
-        double totalGastos = Double.parseDouble(c[3]);
-        double utilidad = Double.parseDouble(c[4]);
-        if (c.length > 5 && !c[5].isEmpty()) {
-            for (String detalle : c[5].split("\\" + SEP_DETALLE)) {
-                int pos = detalle.lastIndexOf(SEP_MONTO);
-                l.agregarDetalle(detalle.substring(0, pos), Double.parseDouble(detalle.substring(pos + 1)));
+        try (PreparedStatement ps = cn.prepareStatement(
+                "SELECT concepto, monto FROM detalle_liquidacion WHERE id_liquidacion = ? ORDER BY id_detalle")) {
+            ps.setInt(1, idLiquidacion);
+            try (ResultSet rd = ps.executeQuery()) {
+                while (rd.next()) {
+                    l.agregarDetalle(rd.getString("concepto"), rd.getDouble("monto"));
+                }
             }
         }
-        // totalGastos y utilidad se recalculan con el mismo metodo del modelo: ingreso = gastos + utilidad
+        // mismo cálculo del modelo: ingreso = gastos + utilidad
         l.calcular(totalGastos + utilidad);
         return l;
     }
 
-    @Override
-    protected int idDe(Liquidacion l) {
-        return l.getId();
-    }
-
-    @Override
-    protected void fijarId(Liquidacion l, int id) {
-        l.setId(id);
-    }
-
-    @Override
-    protected void marcarBaja(Liquidacion l) {
-        throw new UnsupportedOperationException("Las liquidaciones no se dan de baja (historico contable).");
-    }
-
-    public Liquidacion buscarPorServicio(int idServicio) {
-        for (Liquidacion l : items) {
-            if (l.getServicio().getId() == idServicio) {
-                return l;
+    private List<Liquidacion> consultar(String condicion, Object... params) {
+        List<Liquidacion> lista = new ArrayList<>();
+        Map<Integer, ServicioTransporte> cache = new HashMap<>();
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(SELECT_BASE + condicion)) {
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
             }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Liquidacion l = mapear(cn, rs, cache);
+                    if (l != null) {
+                        lista.add(l);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo consultar las liquidaciones. Verifique la conexión con MySQL.", e);
         }
-        return null;
+        return lista;
+    }
+
+    /** Guarda la liquidación y sus detalles en una sola transacción. */
+    @Override
+    public void guardar(Liquidacion l) {
+        String sqlL = "INSERT INTO liquidacion (id_servicio, fecha, total_gastos, utilidad) VALUES (?, ?, ?, ?)";
+        String sqlD = "INSERT INTO detalle_liquidacion (id_liquidacion, concepto, monto) VALUES (?, ?, ?)";
+        try (Connection cn = ConexionBD.obtener()) {
+            cn.setAutoCommit(false);
+            try (PreparedStatement psL = cn.prepareStatement(sqlL, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement psD = cn.prepareStatement(sqlD)) {
+                psL.setInt(1, l.getServicio().getId());
+                psL.setDate(2, Date.valueOf(l.getFecha()));
+                psL.setDouble(3, l.getTotalGastos());
+                psL.setDouble(4, l.getUtilidad());
+                psL.executeUpdate();
+                try (ResultSet rs = psL.getGeneratedKeys()) {
+                    rs.next();
+                    l.setId(rs.getInt(1));
+                }
+                for (DetalleLiquidacion d : l.getDetalles()) {
+                    psD.setInt(1, l.getId());
+                    psD.setString(2, d.getConcepto());
+                    psD.setDouble(3, d.getMonto());
+                    psD.addBatch();
+                }
+                psD.executeBatch();
+                cn.commit();
+            } catch (SQLException e) {
+                cn.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            if (e.getErrorCode() == MYSQL_DUPLICADO) {
+                throw new AccesoDatosException("El servicio ya fue liquidado.", e);
+            }
+            throw new AccesoDatosException("No se pudo guardar la liquidación. Verifique la conexión con MySQL.", e);
+        }
+    }
+
+    @Override
+    public Liquidacion buscarPorId(int id) {
+        List<Liquidacion> r = consultar("WHERE id_liquidacion = ?", id);
+        return r.isEmpty() ? null : r.get(0);
+    }
+
+    @Override
+    public List<Liquidacion> listar() {
+        return consultar("ORDER BY id_liquidacion");
+    }
+
+    @Override
+    public void actualizar(Liquidacion l) {
+        throw new UnsupportedOperationException("Las liquidaciones no se modifican (histórico contable).");
+    }
+
+    @Override
+    public void darDeBaja(int id) {
+        throw new UnsupportedOperationException("Las liquidaciones no se dan de baja (histórico contable).");
+    }
+
+    @Override
+    public int siguienteId() {
+        try (Connection cn = ConexionBD.obtener();
+                PreparedStatement ps = cn.prepareStatement(
+                        "SELECT COALESCE(MAX(id_liquidacion), 0) + 1 FROM liquidacion");
+                ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new AccesoDatosException("No se pudo obtener el siguiente id.", e);
+        }
+    }
+
+    @Override
+    public Liquidacion buscarPorServicio(int idServicio) {
+        List<Liquidacion> r = consultar("WHERE id_servicio = ?", idServicio);
+        return r.isEmpty() ? null : r.get(0);
     }
 
     // Sobrecarga: por rango de fechas
     public List<Liquidacion> buscar(LocalDate desde, LocalDate hasta) {
-        List<Liquidacion> resultado = new ArrayList<>();
-        for (Liquidacion l : items) {
-            if (!l.getFecha().isBefore(desde) && !l.getFecha().isAfter(hasta)) {
-                resultado.add(l);
-            }
-        }
-        return resultado;
+        return consultar("WHERE fecha BETWEEN ? AND ? ORDER BY fecha, id_liquidacion",
+                Date.valueOf(desde), Date.valueOf(hasta));
     }
 }
