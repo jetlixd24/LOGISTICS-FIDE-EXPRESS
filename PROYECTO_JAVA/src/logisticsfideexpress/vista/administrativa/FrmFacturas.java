@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Factura;
 import logisticsfideexpress.modelo.Proveedor;
 import logisticsfideexpress.modelo.ServicioTransporte;
@@ -23,17 +23,17 @@ import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formato;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Opcion;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF34 a RF36: emitir facturas de venta de servicios entregados y registrar facturas de compra. */
 @SuppressWarnings("unchecked")
-public class FrmFacturas extends FrmMantenimiento {
+public class FrmFacturas extends FrmCrudBase {
 
     private static final String TODOS = "Todos";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Numero", "Tipo", "Fecha", "Tercero", "Total",
             "Saldo", "Estado");
     private final JTable tabla = new JTable(modelo);
@@ -48,7 +48,7 @@ public class FrmFacturas extends FrmMantenimiento {
     private final BotonRedondeado btnEmitir = Estilo.botonPrimario("Emitir factura de venta");
     private final BotonRedondeado btnCompra = Estilo.botonSecundario("Registrar factura de compra");
 
-    public FrmFacturas(GestorLogistico gestor) {
+    public FrmFacturas(ServiceFactory gestor) {
         super("Facturas", 1340, 800);
         this.gestor = gestor;
         for (JComboBox<?> c : new JComboBox<?>[]{cmbVenta, cmbTipoTercero, cmbTercero, cmbFiltroTipo, cmbFiltroEstado}) {

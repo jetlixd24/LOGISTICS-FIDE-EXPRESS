@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -14,14 +14,14 @@ import logisticsfideexpress.modelo.Cliente;
 import logisticsfideexpress.modelo.Usuario;
 
 /**
- * Vista especializada de UsuarioRepository: los clientes son usuarios
- * (herencia), por eso se guardan en data/usuarios.txt y no se duplican datos.
+ * Vista especializada de UsuarioDAO: los clientes son usuarios
+(herencia), por eso se guardan en data/usuarios.txt y no se duplican datos.
  */
-public class ClienteRepository implements IRepositorio<Cliente> {
+public class ClienteDAO implements GenericDAO<Cliente> {
 
-    private final UsuarioRepository usuarios;
+    private final UsuarioDAO usuarios;
 
-    public ClienteRepository(UsuarioRepository usuarios) {
+    public ClienteDAO(UsuarioDAO usuarios) {
         this.usuarios = usuarios;
     }
 

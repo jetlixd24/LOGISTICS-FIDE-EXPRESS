@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Factura;
 import logisticsfideexpress.modelo.Pago;
 import logisticsfideexpress.modelo.enums.EstadoFactura;
@@ -19,15 +19,15 @@ import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formato;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Opcion;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF37: registrar pagos totales o parciales; el saldo y el estado de la factura se actualizan solos. */
 @SuppressWarnings("unchecked")
-public class FrmPagos extends FrmMantenimiento {
+public class FrmPagos extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Fecha", "Factura", "Tipo", "Tercero", "Monto", "Metodo");
     private final JTable tabla = new JTable(modelo);
     private final JComboBox<Opcion<Factura>> cmbFactura = new JComboBox<>();
@@ -40,7 +40,7 @@ public class FrmPagos extends FrmMantenimiento {
     private final BotonRedondeado btnSaldo = Estilo.botonSecundario("Pagar saldo total");
     private boolean cargando = false;
 
-    public FrmPagos(GestorLogistico gestor) {
+    public FrmPagos(ServiceFactory gestor) {
         super("Pagos", 1320, 740);
         this.gestor = gestor;
         for (JComboBox<?> c : new JComboBox<?>[]{cmbFactura, cmbFiltro, cmbMetodo}) {

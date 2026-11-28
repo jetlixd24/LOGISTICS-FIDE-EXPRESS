@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.CostoViaje;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
@@ -19,17 +19,17 @@ import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formato;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Opcion;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF29 a RF32: registrar gastos de viaje, aprobarlos o rechazarlos y ver el total aprobado por servicio. */
 @SuppressWarnings("unchecked")
-public class FrmCostos extends FrmMantenimiento {
+public class FrmCostos extends FrmCrudBase {
 
     private static final String TODOS = "Todos";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Servicio N.", "Ruta", "Tipo de gasto", "Monto",
             "Fecha", "Estado");
     private final JTable tabla = new JTable(modelo);
@@ -45,7 +45,7 @@ public class FrmCostos extends FrmMantenimiento {
     private final BotonRedondeado btnRechazar = Estilo.botonPeligro("Rechazar gasto seleccionado");
     private boolean cargando = false;
 
-    public FrmCostos(GestorLogistico gestor) {
+    public FrmCostos(ServiceFactory gestor) {
         super("Costos de viaje", 1320, 760);
         this.gestor = gestor;
         cmbServicio.setFont(Tema.NORMAL);

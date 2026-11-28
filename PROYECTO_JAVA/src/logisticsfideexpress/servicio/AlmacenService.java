@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -18,8 +18,8 @@ import logisticsfideexpress.modelo.MovimientoAlmacen;
 import logisticsfideexpress.modelo.Producto;
 import logisticsfideexpress.modelo.Proveedor;
 import logisticsfideexpress.modelo.enums.TipoMovimiento;
-import logisticsfideexpress.repository.ProductoRepository;
-import logisticsfideexpress.repository.ProveedorRepository;
+import logisticsfideexpress.dao.ProductoDAO;
+import logisticsfideexpress.dao.ProveedorDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -27,12 +27,12 @@ import logisticsfideexpress.util.Validador;
  * RF16-RF20 (productos y movimientos de almacen) y RF35 (proveedores). Solo
  * administrador.
  */
-public class GestorAlmacen {
+public class AlmacenService {
 
-    private final ProductoRepository productos;
-    private final ProveedorRepository proveedores;
+    private final ProductoDAO productos;
+    private final ProveedorDAO proveedores;
 
-    public GestorAlmacen(ProductoRepository productos, ProveedorRepository proveedores) {
+    public AlmacenService(ProductoDAO productos, ProveedorDAO proveedores) {
         this.productos = productos;
         this.proveedores = proveedores;
     }

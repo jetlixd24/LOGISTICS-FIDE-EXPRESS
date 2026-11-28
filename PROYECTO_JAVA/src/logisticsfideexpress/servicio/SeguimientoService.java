@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -22,10 +22,10 @@ import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoConductor;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.repository.ConductorRepository;
-import logisticsfideexpress.repository.SeguimientoRepository;
-import logisticsfideexpress.repository.ServicioRepository;
-import logisticsfideexpress.repository.VehiculoRepository;
+import logisticsfideexpress.dao.ConductorDAO;
+import logisticsfideexpress.dao.SeguimientoDAO;
+import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -33,15 +33,15 @@ import logisticsfideexpress.util.Validador;
  * RF26-RF28: el administrador actualiza el avance (EN_RUTA, ENTREGADO) y el cliente consulta
  * la linea de tiempo de sus servicios. Al entregar, se libera el vehiculo y el conductor.
  */
-public class GestorSeguimiento {
+public class SeguimientoService {
 
-    private final SeguimientoRepository repo;
-    private final ServicioRepository servicios;
-    private final VehiculoRepository vehiculos;
-    private final ConductorRepository conductores;
+    private final SeguimientoDAO repo;
+    private final ServicioDAO servicios;
+    private final VehiculoDAO vehiculos;
+    private final ConductorDAO conductores;
 
-    public GestorSeguimiento(SeguimientoRepository repo, ServicioRepository servicios,
-                             VehiculoRepository vehiculos, ConductorRepository conductores) {
+    public SeguimientoService(SeguimientoDAO repo, ServicioDAO servicios,
+                             VehiculoDAO vehiculos, ConductorDAO conductores) {
         this.repo = repo;
         this.servicios = servicios;
         this.vehiculos = vehiculos;

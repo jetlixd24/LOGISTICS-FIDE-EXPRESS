@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -24,11 +24,11 @@ import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoConductor;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.repository.ClienteRepository;
-import logisticsfideexpress.repository.ConductorRepository;
-import logisticsfideexpress.repository.SeguimientoRepository;
-import logisticsfideexpress.repository.ServicioRepository;
-import logisticsfideexpress.repository.VehiculoRepository;
+import logisticsfideexpress.dao.ClienteDAO;
+import logisticsfideexpress.dao.ConductorDAO;
+import logisticsfideexpress.dao.SeguimientoDAO;
+import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -37,16 +37,16 @@ import logisticsfideexpress.util.Validador;
  * vehiculo + conductor. Cada cambio de estado deja una huella en el seguimiento
  * para que el cliente vea la linea de tiempo.
  */
-public class GestorServicios {
+public class ServicioService {
 
-    private final ServicioRepository repo;
-    private final ClienteRepository clientes;
-    private final VehiculoRepository vehiculos;
-    private final ConductorRepository conductores;
-    private final SeguimientoRepository seguimientos;
+    private final ServicioDAO repo;
+    private final ClienteDAO clientes;
+    private final VehiculoDAO vehiculos;
+    private final ConductorDAO conductores;
+    private final SeguimientoDAO seguimientos;
 
-    public GestorServicios(ServicioRepository repo, ClienteRepository clientes, VehiculoRepository vehiculos,
-            ConductorRepository conductores, SeguimientoRepository seguimientos) {
+    public ServicioService(ServicioDAO repo, ClienteDAO clientes, VehiculoDAO vehiculos,
+            ConductorDAO conductores, SeguimientoDAO seguimientos) {
         this.repo = repo;
         this.clientes = clientes;
         this.vehiculos = vehiculos;

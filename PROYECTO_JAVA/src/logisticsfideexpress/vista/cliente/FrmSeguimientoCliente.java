@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.SeguimientoCarga;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
@@ -26,7 +26,7 @@ import logisticsfideexpress.vista.componentes.Tema;
 /** RF27: el cliente sigue la ubicacion y el estado de su carga. */
 public class FrmSeguimientoCliente extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JComboBox<Opcion<ServicioTransporte>> cmbServicio = new JComboBox<>();
     private final JLabel lblEstado = new JLabel("-");
     private final JLabel lblRuta = Estilo.etiqueta(" ");
@@ -43,7 +43,7 @@ public class FrmSeguimientoCliente extends FrmBase {
     private final BotonRedondeado btnActualizar = Estilo.botonSecundario("Actualizar");
     private boolean cargando = false;
 
-    public FrmSeguimientoCliente(GestorLogistico gestor) {
+    public FrmSeguimientoCliente(ServiceFactory gestor) {
         super("Seguimiento de mi carga", 1050, 680);
         this.gestor = gestor;
         cmbServicio.setFont(Tema.NORMAL);

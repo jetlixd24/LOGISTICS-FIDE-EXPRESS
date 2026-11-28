@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -15,8 +15,8 @@ import logisticsfideexpress.excepciones.RegistroDuplicadoException;
 import logisticsfideexpress.excepciones.RegistroNoEncontradoException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Transportista;
-import logisticsfideexpress.repository.TransportistaRepository;
-import logisticsfideexpress.repository.UsuarioRepository;
+import logisticsfideexpress.dao.TransportistaDAO;
+import logisticsfideexpress.dao.UsuarioDAO;
 import logisticsfideexpress.util.SeguridadUtil;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
@@ -25,12 +25,12 @@ import logisticsfideexpress.util.Validador;
  * RF08-RF09. El transportista no tiene panel propio: lo registra el
  * administrador.
  */
-public class GestorTransportistas {
+public class TransportistaService {
 
-    private final TransportistaRepository repo;
-    private final UsuarioRepository usuarios;
+    private final TransportistaDAO repo;
+    private final UsuarioDAO usuarios;
 
-    public GestorTransportistas(TransportistaRepository repo, UsuarioRepository usuarios) {
+    public TransportistaService(TransportistaDAO repo, UsuarioDAO usuarios) {
         this.repo = repo;
         this.usuarios = usuarios;
     }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -15,8 +15,8 @@ import logisticsfideexpress.excepciones.RegistroNoEncontradoException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Cliente;
 import logisticsfideexpress.modelo.Usuario;
-import logisticsfideexpress.repository.ClienteRepository;
-import logisticsfideexpress.repository.UsuarioRepository;
+import logisticsfideexpress.dao.ClienteDAO;
+import logisticsfideexpress.dao.UsuarioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.SeguridadUtil;
 import logisticsfideexpress.util.Validador;
@@ -24,12 +24,12 @@ import logisticsfideexpress.util.Validador;
 /**
  * RF05-RF07 (y el registro propio del cliente, RF02).
  */
-public class GestorClientes {
+public class ClienteService {
 
-    private final ClienteRepository repo;
-    private final UsuarioRepository usuarios;
+    private final ClienteDAO repo;
+    private final UsuarioDAO usuarios;
 
-    public GestorClientes(ClienteRepository repo, UsuarioRepository usuarios) {
+    public ClienteService(ClienteDAO repo, UsuarioDAO usuarios) {
         this.repo = repo;
         this.usuarios = usuarios;
     }

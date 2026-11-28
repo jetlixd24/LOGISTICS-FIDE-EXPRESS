@@ -10,7 +10,7 @@ package logisticsfideexpress;
  */
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.vista.login.FrmLogin;
 
 /** Punto de entrada: crea la fachada (carga data/ y crea el administrador inicial) y abre el login. */
@@ -22,7 +22,7 @@ public class Main {
         } catch (Exception ex) {
             // si falla, se usa el estilo por defecto de Swing
         }
-        GestorLogistico gestor = new GestorLogistico();
+        ServiceFactory gestor = new ServiceFactory();
         SwingUtilities.invokeLater(() -> new FrmLogin(gestor).setVisible(true));
     }
 }

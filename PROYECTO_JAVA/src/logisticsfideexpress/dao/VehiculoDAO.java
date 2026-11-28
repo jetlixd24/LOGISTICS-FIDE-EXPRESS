@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -23,12 +23,12 @@ import logisticsfideexpress.util.ArchivoUtil;
  * PROPIO: e1=kilometraje e2=fechaCompra (AAAA-MM-DD, puede ir vacia) AFILIADO:
  * e1=tarifaAcordada e2=idTransportista
  */
-public class VehiculoRepository extends RepositorioArchivo<Vehiculo> {
+public class VehiculoDAO extends RepositorioArchivo<Vehiculo> {
 
     private static final String RUTA = "data/vehiculos.txt";
-    private final TransportistaRepository transportistas;
+    private final TransportistaDAO transportistas;
 
-    public VehiculoRepository(TransportistaRepository transportistas) {
+    public VehiculoDAO(TransportistaDAO transportistas) {
         super(RUTA);
         this.transportistas = transportistas;
         cargar();

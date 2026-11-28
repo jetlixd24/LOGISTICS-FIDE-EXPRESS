@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Transportista;
 import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.VehiculoAfiliado;
@@ -19,16 +19,16 @@ import logisticsfideexpress.modelo.enums.EstadoVehiculo;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 
 /** RF10 a RF13: registrar vehiculos propios y afiliados, modificar, cambiar estado y consultar. */
-public class FrmVehiculos extends FrmMantenimiento {
+public class FrmVehiculos extends FrmCrudBase {
 
     private static final String PROPIO = "Propio";
     private static final String AFILIADO = "Afiliado";
     private static final String TODOS = "Todos";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Tipo", "Placa", "Marca", "Capacidad (kg)",
             "Estado", "Detalle");
     private final JTable tabla = new JTable(modelo);
@@ -50,7 +50,7 @@ public class FrmVehiculos extends FrmMantenimiento {
     private final BotonRedondeado btnNuevo = Estilo.botonSecundario("Nuevo / limpiar");
     private int idSeleccionado = 0;
 
-    public FrmVehiculos(GestorLogistico gestor) {
+    public FrmVehiculos(ServiceFactory gestor) {
         super("Gestion de vehiculos", 1280, 780);
         this.gestor = gestor;
 

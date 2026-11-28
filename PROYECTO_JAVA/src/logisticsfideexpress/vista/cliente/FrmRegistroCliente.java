@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.excepciones.RegistroDuplicadoException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
@@ -19,7 +19,7 @@ import logisticsfideexpress.vista.componentes.PanelTarjeta;
 /** RF02 (CU21): el cliente crea su propia cuenta. */
 public class FrmRegistroCliente extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JTextField txtNombre = Estilo.campo();
     private final JTextField txtCorreo = Estilo.campo();
     private final JPasswordField txtClave = Estilo.clave();
@@ -31,7 +31,7 @@ public class FrmRegistroCliente extends FrmBase {
     private final BotonRedondeado btnCrear = Estilo.botonPrimario("Crear cuenta");
     private final BotonRedondeado btnCancelar = Estilo.botonSecundario("Cancelar");
 
-    public FrmRegistroCliente(GestorLogistico gestor) {
+    public FrmRegistroCliente(ServiceFactory gestor) {
         super("Registro de cliente", 520, 740);
         this.gestor = gestor;
 

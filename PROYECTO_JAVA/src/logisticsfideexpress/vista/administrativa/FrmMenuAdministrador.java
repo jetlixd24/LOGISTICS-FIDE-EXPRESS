@@ -14,7 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Usuario;
 import logisticsfideexpress.modelo.enums.EstadoFactura;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
@@ -35,14 +35,14 @@ public class FrmMenuAdministrador extends JFrame {
         int obtener() throws Exception;
     }
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JLabel lblClientes = cifra();
     private final JLabel lblVehiculos = cifra();
     private final JLabel lblPendientes = cifra();
     private final JLabel lblBajoMinimo = cifra();
     private final JLabel lblFacturas = cifra();
 
-    public FrmMenuAdministrador(GestorLogistico gestor) {
+    public FrmMenuAdministrador(ServiceFactory gestor) {
         if (!Sesion.esAdministrador()) {
             throw new IllegalStateException("Acceso solo para administradores.");
         }

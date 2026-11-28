@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -19,12 +19,12 @@ import logisticsfideexpress.util.ArchivoUtil;
  * data/conductores.txt Formato:
  * id;dni;nombre;licencia;categoria;estado;idVehiculoHabitual (0 = ninguno)
  */
-public class ConductorRepository extends RepositorioArchivo<Conductor> {
+public class ConductorDAO extends RepositorioArchivo<Conductor> {
 
     private static final String RUTA = "data/conductores.txt";
-    private final VehiculoRepository vehiculos;
+    private final VehiculoDAO vehiculos;
 
-    public ConductorRepository(VehiculoRepository vehiculos) {
+    public ConductorDAO(VehiculoDAO vehiculos) {
         super(RUTA);
         this.vehiculos = vehiculos;
         cargar();

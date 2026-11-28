@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -21,11 +21,11 @@ import logisticsfideexpress.util.ArchivoUtil;
  * id;numero;tipo;fecha;terceroTipo;terceroId;terceroNombre;total;saldo;estado
  * Las facturas no se borran ni se dan de baja (historico contable).
  */
-public class FacturaRepository extends RepositorioArchivo<Factura> {
+public class FacturaDAO extends RepositorioArchivo<Factura> {
 
     private static final String RUTA = "data/facturas.txt";
 
-    public FacturaRepository() {
+    public FacturaDAO() {
         super(RUTA);
         cargar();
     }

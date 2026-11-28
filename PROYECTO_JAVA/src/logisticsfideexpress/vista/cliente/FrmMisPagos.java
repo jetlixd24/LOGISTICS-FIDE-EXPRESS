@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Pago;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
@@ -19,7 +19,7 @@ import logisticsfideexpress.vista.componentes.Tema;
 /** RF37: el cliente consulta los pagos que ha realizado. */
 public class FrmMisPagos extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = new DefaultTableModel(
             new String[]{"N. pago", "Fecha", "Factura", "Monto", "Metodo"}, 0) {
         @Override
@@ -31,7 +31,7 @@ public class FrmMisPagos extends FrmBase {
     private final JLabel lblTotal = new JLabel(" ");
     private final BotonRedondeado btnActualizar = Estilo.botonSecundario("Actualizar");
 
-    public FrmMisPagos(GestorLogistico gestor) {
+    public FrmMisPagos(ServiceFactory gestor) {
         super("Mis pagos", 900, 540);
         this.gestor = gestor;
         lblTotal.setFont(Tema.SUBTITULO);

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -16,20 +16,20 @@ import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Conductor;
 import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
-import logisticsfideexpress.repository.ConductorRepository;
-import logisticsfideexpress.repository.VehiculoRepository;
+import logisticsfideexpress.dao.ConductorDAO;
+import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
 /**
  * RF14-RF15.
  */
-public class GestorConductores {
+public class ConductorService {
 
-    private final ConductorRepository repo;
-    private final VehiculoRepository vehiculos;
+    private final ConductorDAO repo;
+    private final VehiculoDAO vehiculos;
 
-    public GestorConductores(ConductorRepository repo, VehiculoRepository vehiculos) {
+    public ConductorService(ConductorDAO repo, VehiculoDAO vehiculos) {
         this.repo = repo;
         this.vehiculos = vehiculos;
     }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -26,29 +26,29 @@ import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
 import logisticsfideexpress.modelo.enums.TipoFactura;
-import logisticsfideexpress.repository.CostoRepository;
-import logisticsfideexpress.repository.FacturaRepository;
-import logisticsfideexpress.repository.LiquidacionRepository;
-import logisticsfideexpress.repository.ProductoRepository;
-import logisticsfideexpress.repository.ServicioRepository;
-import logisticsfideexpress.repository.VehiculoRepository;
+import logisticsfideexpress.dao.CostoDAO;
+import logisticsfideexpress.dao.FacturaDAO;
+import logisticsfideexpress.dao.LiquidacionDAO;
+import logisticsfideexpress.dao.ProductoDAO;
+import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.VehiculoDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
 /**
  * RF38-RF40: reportes de solo lectura (no modifica nada). Solo administrador.
  */
-public class GestorReportes {
+public class ReporteService {
 
-    private final ServicioRepository servicios;
-    private final VehiculoRepository vehiculos;
-    private final ProductoRepository productos;
-    private final CostoRepository costos;
-    private final LiquidacionRepository liquidaciones;
-    private final FacturaRepository facturas;
+    private final ServicioDAO servicios;
+    private final VehiculoDAO vehiculos;
+    private final ProductoDAO productos;
+    private final CostoDAO costos;
+    private final LiquidacionDAO liquidaciones;
+    private final FacturaDAO facturas;
 
-    public GestorReportes(ServicioRepository servicios, VehiculoRepository vehiculos, ProductoRepository productos,
-            CostoRepository costos, LiquidacionRepository liquidaciones, FacturaRepository facturas) {
+    public ReporteService(ServicioDAO servicios, VehiculoDAO vehiculos, ProductoDAO productos,
+            CostoDAO costos, LiquidacionDAO liquidaciones, FacturaDAO facturas) {
         this.servicios = servicios;
         this.vehiculos = vehiculos;
         this.productos = productos;

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -22,15 +22,15 @@ import logisticsfideexpress.util.ArchivoUtil;
  *  data/movimientos.txt  -> id;idProducto;fecha;tipo;cantidad
  * Los movimientos son historicos: solo se agregan, nunca se borran.
  */
-public class ProductoRepository extends RepositorioArchivo<Producto> {
+public class ProductoDAO extends RepositorioArchivo<Producto> {
 
     private static final String RUTA = "data/productos.txt";
     private static final String RUTA_MOVIMIENTOS = "data/movimientos.txt";
 
-    private final ProveedorRepository proveedores;
+    private final ProveedorDAO proveedores;
     private final List<MovimientoAlmacen> movimientos = new ArrayList<>();
 
-    public ProductoRepository(ProveedorRepository proveedores) {
+    public ProductoDAO(ProveedorDAO proveedores) {
         super(RUTA);
         this.proveedores = proveedores;
         cargar();

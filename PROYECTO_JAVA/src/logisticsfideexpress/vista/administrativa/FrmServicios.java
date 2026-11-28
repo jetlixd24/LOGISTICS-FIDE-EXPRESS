@@ -10,21 +10,21 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF22, RF23, RF25: revisar solicitudes de los clientes, aprobarlas (con tarifa) o rechazarlas (con motivo). */
-public class FrmServicios extends FrmMantenimiento {
+public class FrmServicios extends FrmCrudBase {
 
     private static final String TODOS = "Todos";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("N.", "Fecha", "Cliente", "Origen", "Destino",
             "Carga", "Peso (kg)", "Estado", "Tarifa");
     private final JTable tabla = new JTable(modelo);
@@ -40,7 +40,7 @@ public class FrmServicios extends FrmMantenimiento {
     private final BotonRedondeado btnRechazar = Estilo.botonPeligro("Rechazar solicitud");
     private int idSeleccionado = 0;
 
-    public FrmServicios(GestorLogistico gestor) {
+    public FrmServicios(ServiceFactory gestor) {
         super("Solicitudes y servicios", 1320, 780);
         this.gestor = gestor;
         cmbFiltro.setFont(Tema.NORMAL);

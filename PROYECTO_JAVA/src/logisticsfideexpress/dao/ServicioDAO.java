@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -29,17 +29,17 @@ import logisticsfideexpress.util.ArchivoUtil;
  * id;idServicio;idVehiculo;idConductor;fechaSalida;fechaLlegada;estado Los
  * seguimientos los guarda SeguimientoRepository.
  */
-public class ServicioRepository extends RepositorioArchivo<ServicioTransporte> {
+public class ServicioDAO extends RepositorioArchivo<ServicioTransporte> {
 
     private static final String RUTA = "data/servicios.txt";
     private static final String RUTA_ASIGNACIONES = "data/asignaciones.txt";
 
-    private final ClienteRepository clientes;
-    private final VehiculoRepository vehiculos;
-    private final ConductorRepository conductores;
+    private final ClienteDAO clientes;
+    private final VehiculoDAO vehiculos;
+    private final ConductorDAO conductores;
 
-    public ServicioRepository(ClienteRepository clientes, VehiculoRepository vehiculos,
-            ConductorRepository conductores) {
+    public ServicioDAO(ClienteDAO clientes, VehiculoDAO vehiculos,
+            ConductorDAO conductores) {
         super(RUTA);
         this.clientes = clientes;
         this.vehiculos = vehiculos;

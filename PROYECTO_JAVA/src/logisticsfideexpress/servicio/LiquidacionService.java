@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -19,9 +19,9 @@ import logisticsfideexpress.modelo.Liquidacion;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
-import logisticsfideexpress.repository.CostoRepository;
-import logisticsfideexpress.repository.LiquidacionRepository;
-import logisticsfideexpress.repository.ServicioRepository;
+import logisticsfideexpress.dao.CostoDAO;
+import logisticsfideexpress.dao.LiquidacionDAO;
+import logisticsfideexpress.dao.ServicioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -29,13 +29,13 @@ import logisticsfideexpress.util.Validador;
  * RF33 y RF39: liquidacion de un servicio entregado (ingreso - gastos aprobados
  * = utilidad).
  */
-public class GestorLiquidaciones {
+public class LiquidacionService {
 
-    private final LiquidacionRepository repo;
-    private final ServicioRepository servicios;
-    private final CostoRepository costos;
+    private final LiquidacionDAO repo;
+    private final ServicioDAO servicios;
+    private final CostoDAO costos;
 
-    public GestorLiquidaciones(LiquidacionRepository repo, ServicioRepository servicios, CostoRepository costos) {
+    public LiquidacionService(LiquidacionDAO repo, ServicioDAO servicios, CostoDAO costos) {
         this.repo = repo;
         this.servicios = servicios;
         this.costos = costos;

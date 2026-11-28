@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.excepciones.OperacionNoPermitidaException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.modelo.Cliente;
@@ -44,7 +44,7 @@ public class FrmMenuCliente extends JFrame {
         int obtener() throws Exception;
     }
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final CardLayout cartas = new CardLayout();
     private final JPanel zona = new JPanel(cartas);
 
@@ -61,7 +61,7 @@ public class FrmMenuCliente extends JFrame {
     private final JPasswordField txtClave = Estilo.clave();
     private final BotonRedondeado btnGuardar = Estilo.botonPrimario("Guardar cambios");
 
-    public FrmMenuCliente(GestorLogistico gestor) {
+    public FrmMenuCliente(ServiceFactory gestor) {
         if (!Sesion.esCliente()) {
             throw new IllegalStateException("Acceso solo para clientes.");
         }

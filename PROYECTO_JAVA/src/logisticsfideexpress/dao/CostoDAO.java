@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -20,12 +20,12 @@ import logisticsfideexpress.util.ArchivoUtil;
  * data/costos.txt Formato: id;idServicio;tipo;monto;fecha;estado Baja logica:
  * el gasto queda RECHAZADO.
  */
-public class CostoRepository extends RepositorioArchivo<CostoViaje> {
+public class CostoDAO extends RepositorioArchivo<CostoViaje> {
 
     private static final String RUTA = "data/costos.txt";
-    private final ServicioRepository servicios;
+    private final ServicioDAO servicios;
 
-    public CostoRepository(ServicioRepository servicios) {
+    public CostoDAO(ServicioDAO servicios) {
         super(RUTA);
         this.servicios = servicios;
         cargar();

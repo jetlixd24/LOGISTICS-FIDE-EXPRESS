@@ -8,18 +8,18 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Usuario;
 import logisticsfideexpress.modelo.enums.EstadoUsuario;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 
 /** RF02, RF03: usuarios del sistema. Crea administradores y activa o desactiva cuentas. */
-public class FrmUsuarios extends FrmMantenimiento {
+public class FrmUsuarios extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Nombre", "Correo", "Rol", "Estado");
     private final JTable tabla = new JTable(modelo);
     private final JTextField txtBuscar = Estilo.campo();
@@ -31,7 +31,7 @@ public class FrmUsuarios extends FrmMantenimiento {
     private final BotonRedondeado btnActivar = Estilo.botonSecundario("Activar usuario");
     private final BotonRedondeado btnDesactivar = Estilo.botonPeligro("Desactivar usuario");
 
-    public FrmUsuarios(GestorLogistico gestor) {
+    public FrmUsuarios(ServiceFactory gestor) {
         super("Usuarios del sistema", 1180, 700);
         this.gestor = gestor;
 

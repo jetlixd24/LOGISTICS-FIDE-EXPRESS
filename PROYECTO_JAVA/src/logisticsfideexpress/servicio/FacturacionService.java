@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -23,12 +23,12 @@ import logisticsfideexpress.modelo.Transportista;
 import logisticsfideexpress.modelo.enums.EstadoFactura;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.modelo.enums.TipoFactura;
-import logisticsfideexpress.repository.ClienteRepository;
-import logisticsfideexpress.repository.FacturaRepository;
-import logisticsfideexpress.repository.PagoRepository;
-import logisticsfideexpress.repository.ProveedorRepository;
-import logisticsfideexpress.repository.ServicioRepository;
-import logisticsfideexpress.repository.TransportistaRepository;
+import logisticsfideexpress.dao.ClienteDAO;
+import logisticsfideexpress.dao.FacturaDAO;
+import logisticsfideexpress.dao.PagoDAO;
+import logisticsfideexpress.dao.ProveedorDAO;
+import logisticsfideexpress.dao.ServicioDAO;
+import logisticsfideexpress.dao.TransportistaDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -37,18 +37,18 @@ import logisticsfideexpress.util.Validador;
  * transportista) y pagos. El cliente solo consulta sus propias facturas y pagos
  * (RN07).
  */
-public class GestorFacturacion {
+public class FacturacionService {
 
-    private final FacturaRepository facturas;
-    private final PagoRepository pagos;
-    private final ServicioRepository servicios;
-    private final ClienteRepository clientes;
-    private final ProveedorRepository proveedores;
-    private final TransportistaRepository transportistas;
+    private final FacturaDAO facturas;
+    private final PagoDAO pagos;
+    private final ServicioDAO servicios;
+    private final ClienteDAO clientes;
+    private final ProveedorDAO proveedores;
+    private final TransportistaDAO transportistas;
 
-    public GestorFacturacion(FacturaRepository facturas, PagoRepository pagos, ServicioRepository servicios,
-            ClienteRepository clientes, ProveedorRepository proveedores,
-            TransportistaRepository transportistas) {
+    public FacturacionService(FacturaDAO facturas, PagoDAO pagos, ServicioDAO servicios,
+            ClienteDAO clientes, ProveedorDAO proveedores,
+            TransportistaDAO transportistas) {
         this.facturas = facturas;
         this.pagos = pagos;
         this.servicios = servicios;

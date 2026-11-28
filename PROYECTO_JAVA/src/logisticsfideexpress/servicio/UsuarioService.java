@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -18,7 +18,7 @@ import logisticsfideexpress.modelo.Cliente;
 import logisticsfideexpress.modelo.Usuario;
 import logisticsfideexpress.modelo.enums.EstadoUsuario;
 import logisticsfideexpress.modelo.enums.TipoUsuario;
-import logisticsfideexpress.repository.UsuarioRepository;
+import logisticsfideexpress.dao.UsuarioDAO;
 import logisticsfideexpress.util.SeguridadUtil;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
@@ -26,15 +26,15 @@ import logisticsfideexpress.util.Validador;
 /**
  * RF01-RF04: login, cierre de sesion, registro de usuarios y permisos.
  */
-public class GestorUsuarios {
+public class UsuarioService {
 
     public static final String ADMIN_CORREO = "admin@fide.com";
     public static final String ADMIN_CLAVE = "admin123";
 
-    private final UsuarioRepository repo;
-    private final GestorClientes gestorClientes;
+    private final UsuarioDAO repo;
+    private final ClienteService gestorClientes;
 
-    public GestorUsuarios(UsuarioRepository repo, GestorClientes gestorClientes) {
+    public UsuarioService(UsuarioDAO repo, ClienteService gestorClientes) {
         this.repo = repo;
         this.gestorClientes = gestorClientes;
     }

@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.excepciones.OperacionNoPermitidaException;
 import logisticsfideexpress.excepciones.ValidacionException;
 import logisticsfideexpress.util.Sesion;
@@ -40,13 +40,13 @@ public class FrmLogin extends JFrame {
     /** Ponlo en false para ocultar la ayuda con el usuario de prueba. */
     private static final boolean MOSTRAR_AYUDA = false;
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JTextField txtCorreo = Estilo.campo();
     private final JPasswordField txtClave = Estilo.clave();
     private final JLabel lblMensaje = new JLabel(" ");
     private final BotonRedondeado btnIngresar = Estilo.botonPrimario("Ingresar");
 
-    public FrmLogin(GestorLogistico gestor) {
+    public FrmLogin(ServiceFactory gestor) {
         this.gestor = gestor;
         setTitle("LOGISTICS FIDE EXPRESS - Inicio de sesion");
         setDefaultCloseOperation(EXIT_ON_CLOSE);

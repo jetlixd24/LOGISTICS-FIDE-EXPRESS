@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -17,11 +17,11 @@ import logisticsfideexpress.util.ArchivoUtil;
  * data/proveedores.txt Formato: id;ruc;razonSocial;telefono Los proveedores no
  * se eliminan: si ya tienen productos o facturas, se perderia el historial.
  */
-public class ProveedorRepository extends RepositorioArchivo<Proveedor> {
+public class ProveedorDAO extends RepositorioArchivo<Proveedor> {
 
     private static final String RUTA = "data/proveedores.txt";
 
-    public ProveedorRepository() {
+    public ProveedorDAO() {
         super(RUTA);
         cargar();
     }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -22,15 +22,15 @@ import logisticsfideexpress.util.ArchivoUtil;
  * separados por '|' (los detalles viven DENTRO de la liquidacion: composicion)
  * Las liquidaciones no se dan de baja (historico contable).
  */
-public class LiquidacionRepository extends RepositorioArchivo<Liquidacion> {
+public class LiquidacionDAO extends RepositorioArchivo<Liquidacion> {
 
     private static final String RUTA = "data/liquidaciones.txt";
     private static final String SEP_DETALLE = "|";
     private static final String SEP_MONTO = ":";
 
-    private final ServicioRepository servicios;
+    private final ServicioDAO servicios;
 
-    public LiquidacionRepository(ServicioRepository servicios) {
+    public LiquidacionDAO(ServicioDAO servicios) {
         super(RUTA);
         this.servicios = servicios;
         cargar();

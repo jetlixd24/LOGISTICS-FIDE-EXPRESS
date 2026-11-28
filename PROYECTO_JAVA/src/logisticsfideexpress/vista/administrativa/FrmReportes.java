@@ -14,7 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Factura;
 import logisticsfideexpress.modelo.Producto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
@@ -29,7 +29,7 @@ import logisticsfideexpress.vista.componentes.Tema;
 /** RF38 a RF40: reportes de servicios, flota, almacen, gastos, utilidad y cuentas por cobrar y pagar. */
 public class FrmReportes extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JLabel lblGastos = valor();
     private final JLabel lblUtilidad = valor();
     private final JLabel lblCobrar = valor();
@@ -43,7 +43,7 @@ public class FrmReportes extends FrmBase {
     private final DefaultTableModel mFacturas = tabla("Numero", "Tipo", "Tercero", "Total", "Saldo", "Estado");
     private final JTextArea txtResumen = new JTextArea();
 
-    public FrmReportes(GestorLogistico gestor) {
+    public FrmReportes(ServiceFactory gestor) {
         super("Reportes", 1180, 800);
         this.gestor = gestor;
 

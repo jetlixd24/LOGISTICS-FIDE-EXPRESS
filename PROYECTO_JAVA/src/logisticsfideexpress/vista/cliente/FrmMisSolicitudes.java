@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
@@ -18,7 +18,7 @@ import logisticsfideexpress.vista.componentes.FrmBase;
 /** RF25: el cliente consulta el estado de sus solicitudes. */
 public class FrmMisSolicitudes extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = new DefaultTableModel(new String[]{"N.", "Fecha", "Origen", "Destino",
         "Carga", "Peso (kg)", "Estado", "Tarifa", "Detalle"}, 0) {
         @Override
@@ -29,7 +29,7 @@ public class FrmMisSolicitudes extends FrmBase {
     private final JTable tabla = new JTable(modelo);
     private final BotonRedondeado btnActualizar = Estilo.botonSecundario("Actualizar");
 
-    public FrmMisSolicitudes(GestorLogistico gestor) {
+    public FrmMisSolicitudes(ServiceFactory gestor) {
         super("Mis solicitudes", 1180, 600);
         this.gestor = gestor;
 

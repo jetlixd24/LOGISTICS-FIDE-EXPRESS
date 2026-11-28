@@ -6,7 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
@@ -17,7 +17,7 @@ import logisticsfideexpress.vista.componentes.PanelTarjeta;
 /** RF21: el cliente solicita un servicio de transporte. Queda PENDIENTE hasta que el administrador lo revise. */
 public class FrmSolicitudTransporte extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JTextField txtOrigen = Estilo.campo();
     private final JTextField txtDestino = Estilo.campo();
     private final JTextField txtDescripcion = Estilo.campo();
@@ -26,7 +26,7 @@ public class FrmSolicitudTransporte extends FrmBase {
     private final BotonRedondeado btnEnviar = Estilo.botonPrimario("Enviar solicitud");
     private final BotonRedondeado btnCerrar = Estilo.botonSecundario("Cerrar");
 
-    public FrmSolicitudTransporte(GestorLogistico gestor) {
+    public FrmSolicitudTransporte(ServiceFactory gestor) {
         super("Solicitar transporte", 520, 640);
         this.gestor = gestor;
 

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -14,14 +14,14 @@ import logisticsfideexpress.modelo.Transportista;
 import logisticsfideexpress.modelo.Usuario;
 
 /**
- * Vista especializada de UsuarioRepository (los transportistas tambien son
- * usuarios).
+ * Vista especializada de UsuarioDAO (los transportistas tambien son
+usuarios).
  */
-public class TransportistaRepository implements IRepositorio<Transportista> {
+public class TransportistaDAO implements GenericDAO<Transportista> {
 
-    private final UsuarioRepository usuarios;
+    private final UsuarioDAO usuarios;
 
-    public TransportistaRepository(UsuarioRepository usuarios) {
+    public TransportistaDAO(UsuarioDAO usuarios) {
         this.usuarios = usuarios;
     }
 

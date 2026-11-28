@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -11,7 +11,7 @@ package logisticsfideexpress.repository;
 import java.util.List;
 
 /** Contrato comun de todos los repositorios (ArrayList+archivos ahora, JDBC en la semana 14). */
-public interface IRepositorio<T> {
+public interface GenericDAO<T> {
 
     void guardar(T entidad);
 

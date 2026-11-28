@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.vista.login.FrmLogin;
 
 /**
@@ -19,7 +19,7 @@ public final class Navegador {
     private Navegador() { }
 
     /** paquete: "administrativa" o "cliente"; clase: por ejemplo "FrmClientes". */
-    public static void abrir(GestorLogistico gestor, String paquete, String clase) {
+    public static void abrir(ServiceFactory gestor, String paquete, String clase) {
         String clave = paquete + "." + clase;
         JFrame existente = ABIERTAS.get(clave);
         if (existente != null && existente.isDisplayable()) {
@@ -30,7 +30,7 @@ public final class Navegador {
         }
         try {
             Class<?> c = Class.forName("logisticsfideexpress.vista." + paquete + "." + clase);
-            JFrame f = (JFrame) c.getConstructor(GestorLogistico.class).newInstance(gestor);
+            JFrame f = (JFrame) c.getConstructor(ServiceFactory.class).newInstance(gestor);
             ABIERTAS.put(clave, f);
             f.setVisible(true);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
@@ -44,7 +44,7 @@ public final class Navegador {
     }
 
     /** RF04: cierra la sesion, cierra todas las ventanas y vuelve a FrmLogin. */
-    public static void cerrarSesion(GestorLogistico gestor) {
+    public static void cerrarSesion(ServiceFactory gestor) {
         gestor.getUsuarios().cerrarSesion();
         ABIERTAS.clear();
         for (Window w : Window.getWindows()) {

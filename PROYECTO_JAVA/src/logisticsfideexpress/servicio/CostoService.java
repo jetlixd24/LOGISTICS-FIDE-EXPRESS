@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.controlador;
+package logisticsfideexpress.servicio;
 
 /**
  *
@@ -17,8 +17,8 @@ import logisticsfideexpress.modelo.CostoViaje;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoGasto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
-import logisticsfideexpress.repository.CostoRepository;
-import logisticsfideexpress.repository.ServicioRepository;
+import logisticsfideexpress.dao.CostoDAO;
+import logisticsfideexpress.dao.ServicioDAO;
 import logisticsfideexpress.util.Sesion;
 import logisticsfideexpress.util.Validador;
 
@@ -26,12 +26,12 @@ import logisticsfideexpress.util.Validador;
  * RF29-RF32: gastos del viaje (combustible, peaje, viaticos, otros) y su
  * aprobacion. Solo administrador.
  */
-public class GestorCostos {
+public class CostoService {
 
-    private final CostoRepository repo;
-    private final ServicioRepository servicios;
+    private final CostoDAO repo;
+    private final ServicioDAO servicios;
 
-    public GestorCostos(CostoRepository repo, ServicioRepository servicios) {
+    public CostoService(CostoDAO repo, ServicioDAO servicios) {
         this.repo = repo;
         this.servicios = servicios;
     }

@@ -14,9 +14,9 @@ import javax.swing.table.DefaultTableModel;
  * Ventana base de los modulos de gestion: tarjeta con formulario a la izquierda
  * y tabla con barra de busqueda a la derecha.
  */
-public abstract class FrmMantenimiento extends FrmBase {
+public abstract class FrmCrudBase extends FrmBase {
 
-    protected FrmMantenimiento(String titulo, int ancho, int alto) {
+    protected FrmCrudBase(String titulo, int ancho, int alto) {
         super(titulo, ancho, alto);
     }
 

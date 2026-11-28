@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -20,7 +20,7 @@ import logisticsfideexpress.util.ArchivoUtil;
  * Cada repositorio hijo solo define como convertir objeto <-> linea.
  * IMPORTANTE: el hijo debe llamar a cargar() al final de su constructor.
  */
-public abstract class RepositorioArchivo<T> implements IRepositorio<T> {
+public abstract class RepositorioArchivo<T> implements GenericDAO<T> {
 
     private final String ruta;
     protected final List<T> items = new ArrayList<>();

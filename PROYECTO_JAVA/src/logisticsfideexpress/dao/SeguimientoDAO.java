@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package logisticsfideexpress.repository;
+package logisticsfideexpress.dao;
 
 /**
  *
@@ -22,12 +22,12 @@ import logisticsfideexpress.util.ArchivoUtil;
  * id;idServicio;fechaHora;estado;ubicacion;observacion Es historico: no se da
  * de baja. Al cargar, cada seguimiento se agrega a su servicio.
  */
-public class SeguimientoRepository extends RepositorioArchivo<SeguimientoCarga> {
+public class SeguimientoDAO extends RepositorioArchivo<SeguimientoCarga> {
 
     private static final String RUTA = "data/seguimientos.txt";
-    private final ServicioRepository servicios;
+    private final ServicioDAO servicios;
 
-    public SeguimientoRepository(ServicioRepository servicios) {
+    public SeguimientoDAO(ServicioDAO servicios) {
         super(RUTA);
         this.servicios = servicios;
         cargar();
