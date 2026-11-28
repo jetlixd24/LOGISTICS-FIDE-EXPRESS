@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.AsignacionViaje;
 import logisticsfideexpress.modelo.Conductor;
 import logisticsfideexpress.modelo.ServicioTransporte;
@@ -21,15 +21,15 @@ import logisticsfideexpress.modelo.enums.EstadoVehiculo;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Opcion;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF24: asignar vehiculo y conductor disponibles a un servicio aprobado. */
 @SuppressWarnings("unchecked")
-public class FrmAsignaciones extends FrmMantenimiento {
+public class FrmAsignaciones extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Servicio", "Cliente", "Ruta", "Vehiculo",
             "Conductor", "Salida", "Llegada", "Estado");
     private final JTable tabla = new JTable(modelo);
@@ -42,7 +42,7 @@ public class FrmAsignaciones extends FrmMantenimiento {
     private final BotonRedondeado btnActualizar = Estilo.botonSecundario("Actualizar listas");
     private boolean cargando = false;
 
-    public FrmAsignaciones(GestorLogistico gestor) {
+    public FrmAsignaciones(ServiceFactory gestor) {
         super("Asignaciones de viaje", 1320, 720);
         this.gestor = gestor;
         for (JComboBox<?> c : new JComboBox<?>[]{cmbServicio, cmbVehiculo, cmbConductor}) {

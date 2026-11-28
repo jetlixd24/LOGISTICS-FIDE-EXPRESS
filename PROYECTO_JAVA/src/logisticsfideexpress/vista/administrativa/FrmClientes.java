@@ -8,17 +8,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Cliente;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 
 /** RF05, RF06, RF07: registrar, modificar y dar de baja clientes. */
-public class FrmClientes extends FrmMantenimiento {
+public class FrmClientes extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Nombre", "Documento", "Razon social",
             "Telefono", "Direccion", "Estado");
     private final JTable tabla = new JTable(modelo);
@@ -36,7 +36,7 @@ public class FrmClientes extends FrmMantenimiento {
     private final BotonRedondeado btnNuevo = Estilo.botonSecundario("Nuevo / limpiar");
     private int idSeleccionado = 0;
 
-    public FrmClientes(GestorLogistico gestor) {
+    public FrmClientes(ServiceFactory gestor) {
         super("Gestion de clientes", 1240, 760);
         this.gestor = gestor;
 

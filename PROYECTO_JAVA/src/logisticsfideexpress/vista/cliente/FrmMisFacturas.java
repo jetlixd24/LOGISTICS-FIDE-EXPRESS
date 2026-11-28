@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Factura;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
@@ -19,7 +19,7 @@ import logisticsfideexpress.vista.componentes.Tema;
 /** RF36: el cliente consulta sus facturas, su saldo y su estado. */
 public class FrmMisFacturas extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = new DefaultTableModel(
             new String[]{"Numero", "Fecha", "Total", "Pagado", "Saldo", "Estado"}, 0) {
         @Override
@@ -31,7 +31,7 @@ public class FrmMisFacturas extends FrmBase {
     private final JLabel lblSaldo = new JLabel(" ");
     private final BotonRedondeado btnActualizar = Estilo.botonSecundario("Actualizar");
 
-    public FrmMisFacturas(GestorLogistico gestor) {
+    public FrmMisFacturas(ServiceFactory gestor) {
         super("Mis facturas", 1000, 560);
         this.gestor = gestor;
         lblSaldo.setFont(Tema.SUBTITULO);

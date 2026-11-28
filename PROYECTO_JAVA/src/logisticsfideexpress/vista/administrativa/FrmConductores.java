@@ -8,22 +8,22 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Conductor;
 import logisticsfideexpress.modelo.Vehiculo;
 import logisticsfideexpress.modelo.enums.EstadoVehiculo;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF14, RF15: registrar conductores y asociarles su vehiculo habitual. */
-public class FrmConductores extends FrmMantenimiento {
+public class FrmConductores extends FrmCrudBase {
 
     private static final String SIN_VEHICULO = "(Sin vehiculo)";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "DNI", "Nombre", "Licencia", "Categoria",
             "Estado", "Vehiculo habitual");
     private final JTable tabla = new JTable(modelo);
@@ -38,7 +38,7 @@ public class FrmConductores extends FrmMantenimiento {
     private final BotonRedondeado btnNuevo = Estilo.botonSecundario("Nuevo / limpiar");
     private int idSeleccionado = 0;
 
-    public FrmConductores(GestorLogistico gestor) {
+    public FrmConductores(ServiceFactory gestor) {
         super("Gestion de conductores", 1240, 720);
         this.gestor = gestor;
         cmbVehiculo.setFont(Tema.NORMAL);

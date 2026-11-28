@@ -13,24 +13,24 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.MovimientoAlmacen;
 import logisticsfideexpress.modelo.Producto;
 import logisticsfideexpress.modelo.Proveedor;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF16 a RF20: productos, proveedores, entradas y salidas de almacen y alerta de stock minimo. */
-public class FrmAlmacen extends FrmMantenimiento {
+public class FrmAlmacen extends FrmCrudBase {
 
     private static final String SIN_PROVEEDOR = "(Sin proveedor)";
     private static final String TODOS = "Todos los productos";
     private static final String BAJO = "BAJO MINIMO";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
 
     // ----- productos
     private final DefaultTableModel modeloProd = modelo("ID", "Codigo", "Nombre", "Unidad", "Stock",
@@ -78,7 +78,7 @@ public class FrmAlmacen extends FrmMantenimiento {
     private final JTextField txtTelefono = Estilo.campo();
     private final BotonRedondeado btnRegProv = Estilo.botonPrimario("Registrar proveedor");
 
-    public FrmAlmacen(GestorLogistico gestor) {
+    public FrmAlmacen(ServiceFactory gestor) {
         super("Almacen", 1280, 780);
         this.gestor = gestor;
         cmbProveedor.setFont(Tema.NORMAL);

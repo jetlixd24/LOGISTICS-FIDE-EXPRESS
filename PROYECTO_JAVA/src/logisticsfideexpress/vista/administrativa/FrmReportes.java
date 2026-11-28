@@ -14,7 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Factura;
 import logisticsfideexpress.modelo.Producto;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
@@ -25,11 +25,17 @@ import logisticsfideexpress.vista.componentes.Formato;
 import logisticsfideexpress.vista.componentes.FrmBase;
 import logisticsfideexpress.vista.componentes.PanelTarjeta;
 import logisticsfideexpress.vista.componentes.Tema;
+import java.util.List;
+import logisticsfideexpress.modelo.ResumenPeriodo;
+import logisticsfideexpress.vista.componentes.PanelGraficoBarras;
 
-/** RF38 a RF40: reportes de servicios, flota, almacen, gastos, utilidad y cuentas por cobrar y pagar. */
+/**
+ * RF38 a RF40: reportes de servicios, flota, almacen, gastos, utilidad y
+ * cuentas por cobrar y pagar.
+ */
 public class FrmReportes extends FrmBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final JLabel lblGastos = valor();
     private final JLabel lblUtilidad = valor();
     private final JLabel lblCobrar = valor();
@@ -42,8 +48,9 @@ public class FrmReportes extends FrmBase {
     private final DefaultTableModel mProductos = tabla("Codigo", "Producto", "Stock", "Minimo", "Proveedor");
     private final DefaultTableModel mFacturas = tabla("Numero", "Tipo", "Tercero", "Total", "Saldo", "Estado");
     private final JTextArea txtResumen = new JTextArea();
+    private final JPanel panelGrafico = new JPanel(new BorderLayout());
 
-    public FrmReportes(GestorLogistico gestor) {
+    public FrmReportes(ServiceFactory gestor) {
         super("Reportes", 1180, 800);
         this.gestor = gestor;
 
@@ -89,6 +96,7 @@ public class FrmReportes extends FrmBase {
         tabs.addTab("Productos bajo minimo", Estilo.tabla(new JTable(mProductos)));
         tabs.addTab("Facturas con saldo", Estilo.tabla(new JTable(mFacturas)));
         tabs.addTab("Resumen general", new JScrollPane(txtResumen));
+        tabs.addTab("Ingresos vs egresos", panelGrafico);
 
         getContenido().setLayout(new BorderLayout(0, 0));
         getContenido().add(norte, BorderLayout.NORTH);
@@ -170,6 +178,24 @@ public class FrmReportes extends FrmBase {
             }
             txtResumen.setText(gestor.getReportes().resumenGeneral());
             txtResumen.setCaretPosition(0);
+            
+            
+            List<ResumenPeriodo> serie = conPeriodo
+                    ? gestor.getReportes().ingresosEgresos(d, h) : gestor.getReportes().ingresosEgresos();
+            String[] etiquetas = new String[serie.size()];
+            double[] ingresos = new double[serie.size()];
+            double[] egresos = new double[serie.size()];
+            for (int i = 0; i < serie.size(); i++) {
+                etiquetas[i] = serie.get(i).getPeriodo();
+                ingresos[i] = serie.get(i).getIngresos();
+                egresos[i] = serie.get(i).getEgresos();
+            }
+            panelGrafico.removeAll();
+            panelGrafico.add(new PanelGraficoBarras(etiquetas, ingresos, egresos), BorderLayout.CENTER);
+            panelGrafico.revalidate();
+            panelGrafico.repaint();
+            
+            
         } catch (Exception ex) {
             error(ex);
         }

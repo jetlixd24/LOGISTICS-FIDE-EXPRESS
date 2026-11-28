@@ -13,7 +13,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.DetalleLiquidacion;
 import logisticsfideexpress.modelo.Liquidacion;
 import logisticsfideexpress.modelo.ServicioTransporte;
@@ -22,15 +22,15 @@ import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formato;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Opcion;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF33, RF39: generar la liquidacion de un servicio entregado y consultar liquidaciones por periodo. */
 @SuppressWarnings("unchecked")
-public class FrmLiquidaciones extends FrmMantenimiento {
+public class FrmLiquidaciones extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Fecha", "Servicio N.", "Cliente", "Ruta",
             "Ingreso", "Gastos", "Utilidad");
     private final JTable tabla = new JTable(modelo);
@@ -46,7 +46,7 @@ public class FrmLiquidaciones extends FrmMantenimiento {
     private final BotonRedondeado btnTodas = Estilo.botonSecundario("Ver todas");
     private List<Liquidacion> actuales = new ArrayList<>();
 
-    public FrmLiquidaciones(GestorLogistico gestor) {
+    public FrmLiquidaciones(ServiceFactory gestor) {
         super("Liquidaciones", 1340, 800);
         this.gestor = gestor;
         cmbServicio.setFont(Tema.NORMAL);

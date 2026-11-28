@@ -7,17 +7,17 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.Transportista;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 
 /** RF08, RF09: registrar transportistas y consultar sus datos y vehiculos afiliados. */
-public class FrmTransportistas extends FrmMantenimiento {
+public class FrmTransportistas extends FrmCrudBase {
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modelo = modelo("ID", "Contacto", "RUC", "Razon social",
             "Telefono", "Correo", "Vehiculos afiliados");
     private final JTable tabla = new JTable(modelo);
@@ -30,7 +30,7 @@ public class FrmTransportistas extends FrmMantenimiento {
     private final BotonRedondeado btnRegistrar = Estilo.botonPrimario("Registrar transportista");
     private final BotonRedondeado btnLimpiar = Estilo.botonSecundario("Limpiar");
 
-    public FrmTransportistas(GestorLogistico gestor) {
+    public FrmTransportistas(ServiceFactory gestor) {
         super("Gestion de transportistas", 1240, 700);
         this.gestor = gestor;
 

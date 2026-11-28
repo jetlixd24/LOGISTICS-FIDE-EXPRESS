@@ -11,24 +11,24 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import logisticsfideexpress.controlador.GestorLogistico;
+import logisticsfideexpress.servicio.ServiceFactory;
 import logisticsfideexpress.modelo.SeguimientoCarga;
 import logisticsfideexpress.modelo.ServicioTransporte;
 import logisticsfideexpress.modelo.enums.EstadoServicio;
 import logisticsfideexpress.vista.componentes.BotonRedondeado;
 import logisticsfideexpress.vista.componentes.Estilo;
 import logisticsfideexpress.vista.componentes.Formulario;
-import logisticsfideexpress.vista.componentes.FrmMantenimiento;
+import logisticsfideexpress.vista.componentes.FrmCrudBase;
 import logisticsfideexpress.vista.componentes.Tema;
 
 /** RF26, RF28: registrar el avance de una carga y confirmar su entrega. */
-public class FrmSeguimiento extends FrmMantenimiento {
+public class FrmSeguimiento extends FrmCrudBase {
 
     private static final String EN_CURSO = "En curso";
     private static final String ENTREGADOS = "Entregados";
     private static final String TODOS = "Todos los viajes";
 
-    private final GestorLogistico gestor;
+    private final ServiceFactory gestor;
     private final DefaultTableModel modeloServ = modelo("N.", "Cliente", "Ruta", "Carga", "Vehiculo", "Estado");
     private final JTable tablaServ = new JTable(modeloServ);
     private final DefaultTableModel modeloHist = modelo("Fecha y hora", "Estado", "Ubicacion", "Observacion");
@@ -43,7 +43,7 @@ public class FrmSeguimiento extends FrmMantenimiento {
     private final BotonRedondeado btnEntrega = Estilo.botonPrimario("Confirmar entrega");
     private int idSeleccionado = 0;
 
-    public FrmSeguimiento(GestorLogistico gestor) {
+    public FrmSeguimiento(ServiceFactory gestor) {
         super("Seguimiento de cargas", 1340, 800);
         this.gestor = gestor;
         cmbFiltro.setFont(Tema.NORMAL);
